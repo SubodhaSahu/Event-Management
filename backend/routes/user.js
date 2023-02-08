@@ -1,11 +1,12 @@
 const express = require("express");
+const path = require("path");
 const fs = require('fs/promises');
 const router = express.Router();
 
-const path = '../users.json';
+const jsonFile = path.join(process.cwd(), 'json') + '/users.json';
 
 router.post("/login", async (req, res) => {
-    fs.readFile(path)
+    fs.readFile(jsonFile)
         .then((data) => {
             let users = JSON.parse(data);
             let user = checkEmail(users, req.body.email); 

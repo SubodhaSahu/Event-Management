@@ -1,11 +1,12 @@
 const express = require("express");
+const path = require("path");
 const fs = require('fs/promises');
 const router = express.Router();
 
-const path = '../events.json';
+const jsonFile = path.join(process.cwd(), 'json') + '/events.json';
 
 router.get("/", async (req, res) => {
-    fs.readFile(path)
+    fs.readFile(jsonFile)
         .then((data) => {
             res.json(JSON.parse(data));
     })
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-    fs.readFile(path)
+    fs.readFile(jsonFile)
     .then((data) => {
         let events = JSON.parse(data);
         let newData = {
@@ -26,7 +27,7 @@ router.post("/", async (req, res) => {
             "eventVenue": req.body.eventVenue ?? '' 
         };
         events.push(newData);
-        fs.writeFile(path, JSON.stringify(events))
+        fs.writeFile(jsonFile, JSON.stringify(events))
             .then(() => {
                 res.status(201).json({'message' : 'Event Saved successfully'});
             })
