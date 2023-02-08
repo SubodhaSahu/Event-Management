@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    reactStrictMode: true,
-    experimental: { 
-        nftTracing: true 
-      }
-  }
-  
-  module.exports = nextConfig
+module.exports = {
+    target: 'serverless',
+    experimental: { nftTracing: true },
+    serverRuntimeConfig: {
+        PROJECT_ROOT: __dirname
+    }
+}

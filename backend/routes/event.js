@@ -2,13 +2,16 @@ const express = require("express");
 const path = require("path");
 const fs = require('fs/promises');
 const router = express.Router();
+const getConfig = require('../next.config');
+//const { serverRuntimeConfig } = getConfig()
+console.log(getConfig.serverRuntimeConfig.PROJECT_ROOT)
 
 const jsonFile = path.join(process.cwd(), 'json') + '/events.json';
 
 
 router.get("/data", async (req, res) => {
         //Find the absolute path of the json directory
-        const jsonDirectory = path.join(process.cwd(), "json");
+        const jsonDirectory = path.join(getConfig.serverRuntimeConfig.PROJECT_ROOT, "/json");
         //Read the json data file data.json
         const fileContents = await fs.readFile(jsonDirectory + "/data.json");
         //Return the content of the data file in json format
