@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require('fs/promises');
 const router = express.Router();
 
-const path = './users.json';
+const path = '../users.json';
 
 router.post("/login", async (req, res) => {
     fs.readFile(path)

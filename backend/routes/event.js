@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require('fs/promises');
 const router = express.Router();
 
-const path = './events.json';
+const path = '../events.json';
 
 router.get("/", async (req, res) => {
     fs.readFile(path)
