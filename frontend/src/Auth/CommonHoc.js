@@ -9,7 +9,6 @@ const CommonHoc = (HocComponent) => function hocFunction() {
   const checkUserToken = () => {
     let userToken = localStorage.getItem('user');
     userToken = JSON.parse(userToken);
-    console.log(userToken);
     if (typeof (userToken) !== 'undefined' && userToken !== null) {
       setIsLoggedIn(true);
     } else {
