@@ -2,9 +2,8 @@ const express = require("express");
 const path = require("path");
 const fs = require('fs/promises');
 const router = express.Router();
-console.log(path.join(__dirname, '..' ,'package.json'))
 const jsonFile = path.join(process.cwd(), 'json') + '/events.json';
-
+/*
 const eventList = [
     {
         "id": 1,
@@ -40,10 +39,10 @@ const eventList = [
 router.get("/", (req, res) => {
     res.json(eventList);
 });
-
+*/
 
 //Commenting the JSON read functions as reading from JSOn not working in Vercerl app
-/*router.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
     fs.readFile(jsonFile)
         .then((data) => {
             res.json(JSON.parse(data));
@@ -83,5 +82,5 @@ router.post("/", async (req, res) => {
 //   const post = await Posts.findByPk(id);
 //   res.json(post);
 // });
-*/
+
 module.exports = router;

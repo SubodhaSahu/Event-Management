@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require('fs/promises');
 const router = express.Router();
 
-const users = [
+/*const users = [
     {
         "id" : 1,
         "name": "Subodha Sahu",
@@ -34,11 +34,11 @@ router.post("/login", async (req, res) => {
         });
     }
 });
-
+*/
 
 
 //Commented the code as vercel unable to read the file
-/*const jsonFile = path.join(process.cwd(), 'json') + '/users.json';
+const jsonFile = path.join(process.cwd(), 'json') + '/users.json';
 
 router.post("/login", async (req, res) => {
     fs.readFile(jsonFile)
@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
     .catch((error) => {
         res.json(error)    
     });  
-});*/
+});
 
 const checkEmail = (users, email) => {
     const user = users.find(user => user.email.toLowerCase() === email.toLowerCase());
