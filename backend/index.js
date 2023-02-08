@@ -16,5 +16,9 @@ app.use("/event", eventRouter);
 const userRouter = require("./routes/user");
 app.use("/user", userRouter);
 
+app.get("/",  (req, res) => {
+    res.json('Welcome to the API');
+});
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT)
