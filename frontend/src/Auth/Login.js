@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import CommonHoc from './CommonHoc';
 import AuthContext from '../context/AuthProvider';
 
-const apiURL = `${process.env.REACT_APP_API}user/login`;
+const apiURL = 'https://event-management-cofk-subodhasahu.vercel.app/user/login';
 const defaultErrorMessage = 'Something went wrong';
 
 function Login() {
