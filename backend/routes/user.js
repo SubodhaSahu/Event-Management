@@ -1,17 +1,59 @@
-const express = require("express");
-const path = require("path");
-const fs = require('fs/promises');
-const router = express.Router();
+import express from 'express';
+import wrapAsynch from '../utils/AsynchErrorHandle.js';
+import User from '../models/users.js';
+import userSeeds from '../seeds/users.js';
 
-/*const users = [
-    {
-        "id" : 1,
-        "name": "Subodha Sahu",
-        "email": "subodha.sahu@mailinator.com",
-        "password" : "12345"
-    }
-]
+const userRouter = express.Router();
 
+/** *** User API endpoint using Mongo DB */
+userRouter.post(
+  '/many',
+  wrapAsynch(async (req, res) => {
+    await User.insertMany(userSeeds)
+      .then((data) => console.log(data))
+      .catch((e) => console.log(e));
+  })
+);
+
+userRouter.post(
+  '/',
+  wrapAsynch(async (req, res) => {
+    const newUser = new User(req.body);
+    await newUser.save();
+    res.status(201).json(newUser._id);
+  })
+);
+
+userRouter.post(
+  '/login',
+  wrapAsynch(async (req, res) => {
+    const userF = User.findOne({ email: req.body.email });
+    userF
+      .then((data) => {
+        // Means user present so validate the password
+        if (req.body.password === data.password) {
+          res.status(200).json({
+            success: true,
+            message: 'Login successful',
+          });
+        } else {
+          res.status(401).json({
+            success: false,
+            message: 'Invalid Credential',
+          });
+        }
+      })
+      .catch((e) => {
+        res.status(401).json({
+          success: false,
+          message: 'Invalid Email',
+        });
+      });
+  })
+);
+
+/** ********** User API endpoint using file system */
+/*
 router.post("/login", async (req, res) => {
     let user = checkEmail(users, req.body.email);
     if (user) {
@@ -36,7 +78,7 @@ router.post("/login", async (req, res) => {
 });
 */
 
-
+/** 
 //Commented the code as vercel unable to read the file
 const jsonFile = path.join(process.cwd(), 'json') + '/users.json';
 
@@ -70,10 +112,6 @@ router.post("/login", async (req, res) => {
         res.json(error)    
     });  
 });
+*/
 
-const checkEmail = (users, email) => {
-    const user = users.find(user => user.email.toLowerCase() === email.toLowerCase());
-    if (user) return user;
-};
-
-module.exports = router;
+export default userRouter;

@@ -1,46 +1,100 @@
-const express = require("express");
-const path = require("path");
-const fs = require('fs/promises');
-const router = express.Router();
-const jsonFile = path.join(process.cwd(), 'json') + '/events.json';
-/*
-const eventList = [
-    {
-        "id": 1,
-        "eventTitle": "Worldview Education Fair – Accra – Ghana- 2023",
-        "eventDesc": "It is a highly-targeted event, and we anticipate a large turnout of students and families eager to…",
-        "eventDate": "11 Mar - 11 Mar 2022, 12:00 pm - 5:00 pm",
-        "eventVenue": "Accra"
-    },
-    {
-        "id": 2,
-        "eventTitle": "Brooklyn Society For Ethical Culture",
-        "eventDesc": "The Brooklyn Society for Ethical Culture offers a program for children that includes art, service projects, theatre,…",
-        "eventDate": "05 Jul - 12 Aug 2022, 12:00 pm - 6:00 pm",
-        "eventVenue": "BSEC"
-    },
-    {
-        "id": 3,
-        "eventTitle": "International Conference And Expo On Neonatology And Perinatology",
-        "eventDesc": "Hilaris conferences we welcome you all to the International Conference and Expo on Neonatology and Perinatology in…",
-        "eventDate": "04 May - 05 May 2022, 10:00 am - 6:00 pm",
-        "eventVenue": "Amsterdam, Netherlands"
-    },
-    {
-        "id": 4,
-        "eventTitle": "3rd Annual Summit On Diabetes And Endocrinology",
-        "eventDesc": "Conference Series LLC Ltd invites worldwide global audience and presenters to participate at the 3rd Annual Summit…",
-        "eventDate": "14 Sep - 15 Sep 2022, 10:00 am - 5:00 pm",
-        "eventVenue": "Avani Atrium Bangkok Hotel, 1880 New Petchaburi Rd,"
+import express from 'express';
+import wrapAsynch from '../utils/AsynchErrorHandle.js';
+import Event from '../models/events.js';
+import eventSeeds from '../seeds/events.js';
+
+const eventRouter = express.Router();
+// eventRouter.get('/', (req, res) => {
+//   res.send("hello I'm runnig 4000");
+// });
+
+/** ************Event API Using Mongo ************* */
+
+// Used Only to push some data initially
+
+eventRouter.post(
+  '/many',
+  wrapAsynch(async (req, res) => {
+    await Event.insertMany(eventSeeds);
+    // .then(data => console.log(data))
+    // .catch(e => console.log(e))
+  })
+);
+
+eventRouter.get(
+  '/',
+  wrapAsynch(async (req, res) => {
+    // destructure page and limit and set default values
+    const { page = 1, limit = 5 } = req.query;
+    if (page < 1) {
+      throw Error(`Invalid page number`);
     }
 
-];
+    // get the events
+    const events = await Event.find({});
+    // .limit(limit * 1)
+    // .skip((page - 1) * limit);
+    // console.log(Event);
 
-router.get("/", (req, res) => {
-    res.json(eventList);
-});
-*/
+    // get total documents in the Events collection
+    const count = await Event.countDocuments();
 
+    // return response with events, total pages, and current page
+    res.json({
+      events,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
+  })
+);
+
+// Post Request to create event
+eventRouter.post(
+  '/',
+  wrapAsynch(async (req, res) => {
+    const newEvent = new Event(req.body);
+    await newEvent.save();
+    res.status(201).json(newEvent._id);
+  })
+);
+
+// Find event by id
+eventRouter.get(
+  '/:id',
+  wrapAsynch(async (req, res) => {
+    const { id } = req.params;
+    const event = await Event.findById(id);
+    res.status(200).json(event);
+  })
+);
+
+eventRouter.put(
+  '/:id',
+  wrapAsynch(async (req, res) => {
+    const { id } = req.params;
+    const event = await Event.findByIdAndUpdate(id, req.body, {
+      runValidators: true,
+      new: true,
+    });
+    res.status(200).json(event);
+  })
+);
+
+eventRouter.delete(
+  '/:id',
+  wrapAsynch(async (req, res) => {
+    const { id } = req.params;
+    const event = await Event.findByIdAndDelete(id);
+    res.status(200).json(event);
+  })
+);
+
+/** ************Event API Using File System ************* */
+// const path = require('path');
+// const fs = require('fs/promises');
+
+// const jsonFile = `${path.join(process.cwd(), 'json')}/events.json`;
+/** 
 //Commenting the JSON read functions as reading from JSOn not working in Vercerl app
 router.get("/", async (req, res) => {
     fs.readFile(jsonFile)
@@ -82,5 +136,6 @@ router.post("/", async (req, res) => {
 //   const post = await Posts.findByPk(id);
 //   res.json(post);
 // });
+*/
 
-module.exports = router;
+export default eventRouter;
