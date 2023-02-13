@@ -1,62 +1,73 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import React, { useEffect, useState } from 'react';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarker, faClock } from '@fortawesome/fontawesome-free-solid';
-
 // eslint-disable-next-line import/no-extraneous-dependencies
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import EventCard from './EventCard';
 
-const apiURL = `${process.env.REACT_APP_API}event`;
+const apiURL = `${process.env.REACT_APP_API}/event`;
 
 function EventTable() {
   const [events, setEvents] = useState(null);
 
   useEffect(() => {
     axios.get(apiURL).then((response) => {
-      setEvents(response.data);
+      setEvents(response.data.events);
     });
   }, []);
 
+  const marginTop = { marginTop: '-3%' };
+
   return (
-    <div>
-      <div className="card">
-        <div className="card-title p-3">
-          <h1 className="text-center">
+    <div className="container-fluid mt-0">
+      <div className="d-flex justify-content-end pb-2" style={marginTop}>
+        <Link to="/add-event" type="button" className="btn btn-primary">Add Event </Link>
+      </div>
+      <div className="row row-cols-1 row-cols-md-3 g-4">
+        {events
+          && events.map((event) => (
+            <EventCard event={event} key={event._id} />
+          ))}  
+      </div>
+      {events
+        && (
+        <div className="d-flex justify-content-center">
+          <nav aria-label="Page navigation">
+            <ul className="pagination pagination-lg">
+              <li className="page-item">
+                <a className="page-link" href="/" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li className="page-item"><a className="page-link" href="/">1</a></li>
+              <li className="page-item"><a className="page-link" href="/">2</a></li>
+              <li className="page-item"><a className="page-link" href="/">3</a></li>
+              <li className="page-item">
+                <a className="page-link" href="/" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+)}
+      {/* <div className="card">
+        <div className="card-title">
+          <p className="text-center">
             Events around you
-          </h1>
+          </p>
           <a href="add-event" className="btn btn-primary float-end">Add Events</a>
         </div>
         <div className="card-body">
-          <div className="row">
+          <div className="row row-cols-1 row-cols-md-3 g-4">
             {events
               && events.map((event) => (
-                <div key={event.id} className="col-lg-4 mb-3 d-flex align-items-stretch">
-                  <div className="card mb-4 box-shadow rounded">
-                    <div className="card-body d-flex flex-column">
-                      <h5 className="card-title text-primary">{event.eventTitle.substring(0, 30)}</h5>
-                      <span className="card-subtitle mt-3 mb-2 fw-lighter fs-6">
-                        <FontAwesomeIcon icon={faMapMarker} /> 
-                        {' '}
-                        {event.eventVenue}
-                      </span>
-                      <p className="card-subtitle mt-3 mb-2 text-success fs-6"> 
-                        {' '}
-                        <FontAwesomeIcon icon={faClock} /> 
-                        {' '}
-                        {event.eventDate}
-                      </p>
-
-                      <p className="card-text my-5">{event.eventDesc.substring(0, 150)}</p>
-                      <a href="event/id" className="btn btn-outline-success mt-auto align-self-middle">View More</a>
-                    </div>
-                  </div>
-                    
-                </div>
+                <EventCard event={event} key={event._id} /> 
                 ))}
           </div>
         </div>  
-      </div>
+      </div> */}
     </div>
   );
 }

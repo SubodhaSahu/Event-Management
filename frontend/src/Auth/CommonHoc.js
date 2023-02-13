@@ -1,27 +1,26 @@
 /* eslint-disable no-undef */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthProvider';
 
 const CommonHoc = (HocComponent) => function hocFunction() {
+  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  const checkUserToken = () => {
-    let userToken = localStorage.getItem('user');
-    userToken = JSON.parse(userToken);
-    if (typeof (userToken) !== 'undefined' && userToken !== null) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  };
   useEffect(() => {
-      checkUserToken();
-  }, [isLoggedIn]);
+    if ('loggedIn' in auth && auth.loggedIn === true) {
+      navigate('/dashboard');
+    }
+  }, [auth]);
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('loggedIn');
+    if (loggedIn === 'true') {
+      navigate('/dashboard');
+    }
+  }, []);
 
   return (
     <>
-      {isLoggedIn && (navigate('/dashboard'))}
+      {/* {isLoggedIn && (navigate('/dashboard'))} */}
       <section className="vh-100" style={{ backgroundColor: '#eee' }}>
         <div className="container">
           <div className="row d-flex justify-content-center align-items-center">

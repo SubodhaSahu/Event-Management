@@ -30,6 +30,10 @@ const router = createBrowserRouter([
     element: <AddEvent />,
   },
   {
+    path: 'edit-event/:id',
+    element: <AddEvent />,
+  },
+  {
     path: 'about-us',
     element: <AboutUs />,
   },

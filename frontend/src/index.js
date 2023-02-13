@@ -11,12 +11,15 @@ import './index.css';
 
 // import reportWebVitals from './reportWebVitals';
 import router from './RouteConfig';
+import { AuthProvider } from './context/AuthProvider';
 
 // eslint-disable-next-line no-undef
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
     {/* <App /> */}
   </React.StrictMode>
 );

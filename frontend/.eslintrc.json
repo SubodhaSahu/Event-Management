@@ -18,6 +18,8 @@
       "import/no-unresolved" : "off",
       "import/no-named-as-default" : "off",
       "arrow-parens": "off",
-      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+      "no-underscore-dangle": "off",
+      "react/prop-types" : "off"
     }
   }

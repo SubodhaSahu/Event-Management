@@ -1,9 +1,9 @@
 import React from 'react';
 import EventTable from './EventTable';
-import SideBarHoc from './SideBarHoc';
+import LandingPageHoc from './LanndingPageHoc';
 
 function Index() {
   return <EventTable />;
 }
 
-export default SideBarHoc(Index);
+export default LandingPageHoc(Index);

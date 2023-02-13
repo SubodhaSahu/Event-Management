@@ -1,0 +1,55 @@
+
+.side-navbar {
+    background-color: #FFFFFF;
+    border-right: 1px solid #cbd0dd;
+    transition: 0.5s;
+  }
+  
+  .nav-link:active,
+  .nav-link:focus,
+  .nav-link:hover {
+    background-color: #cbd0dd;
+  }
+  .nav-link .active-link{
+    background-color: #cbd0dd;
+    padding : 10px
+  }
+  
+  .my-container {
+    transition: 0.4s;
+  }
+  
+  .active-nav {
+    margin-left: 0;
+  }
+  
+  /* for main section */
+  /* .active-cont {
+    margin-left: 250px;
+  } */
+  
+  #menu-btn {
+    background-color: #cbd0dd;
+    color: #fff;
+    margin-left: -62px;
+  }
+  
+  .my-container input {
+    border-radius: 2rem;
+    padding: 2px 20px;
+  }
+  .footer-bs{
+    position: absolute;
+    width: 100%;
+    min-height: 320px;
+    bottom: 40px;
+    left: 0;
+}
+.top-nav{
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #cbd0dd;
+}
+body {
+  background-color: rgb(238, 238, 238);
+}
+  

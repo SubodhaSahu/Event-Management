@@ -1,20 +1,22 @@
 /* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faLock } from '@fortawesome/fontawesome-free-solid';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import CommonHoc from './CommonHoc';
+import AuthContext from '../context/AuthProvider';
 
-const apiURL = `${process.env.REACT_APP_API}user/login`;
+const apiURL = `${process.env.REACT_APP_API}/user/login`;
+const defaultErrorMessage = 'Something went wrong';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const { setAuth } = useContext(AuthContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,14 +26,23 @@ function Login() {
           password
         })
         .then((response) => {
-          console.log(response);
-          console.log(response.data.user);
-          localStorage.setItem('user', JSON.stringify(response.data.user));
-          navigate('/dashboard');
+          const userInfo = JSON.stringify(response.data.user);
+          localStorage.setItem('loggedIn', true);
+          localStorage.setItem('user', userInfo);
+          setAuth({ loggedIn: true, user: userInfo });
         }).catch((err) => {
-          setError(err.response.data);
+          console.log(err);
+          const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;
+          setError(errMsg);
         });
   };
+
+  // useEffect(() => {
+  //   console.log(auth);
+  //   if ('loggedIn' in auth && auth.loggedIn === true) {
+  //     navigate('/dashboard');
+  //   }
+  // }, []);
 
   return (
     <div>
@@ -47,8 +58,8 @@ function Login() {
         {error 
           && (
           <div className="alert alert-danger" role="alert">
-            {error.message}
-            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" />
+            {error}
+            <button type="button" className="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" />
           </div>
           )}
         <div className="d-flex flex-row align-items-center mb-4">

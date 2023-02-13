@@ -1,5 +1,5 @@
 import React from 'react';
-import SideBarHoc from './SideBarHoc';
+import LandingPageHoc from './LanndingPageHoc';
 
 function PrivacyPolicy() {
     return (
@@ -74,4 +74,4 @@ function PrivacyPolicy() {
     );
 }
 
-export default SideBarHoc(PrivacyPolicy);
+export default LandingPageHoc(PrivacyPolicy);

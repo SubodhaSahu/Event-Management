@@ -1,5 +1,5 @@
 import React from 'react';
-import SideBarHoc from './SideBarHoc';
+import LandingPageHoc from './LanndingPageHoc';
 
 function AboutUs() {
     return (
@@ -102,4 +102,4 @@ function AboutUs() {
     );
 }
 
-export default SideBarHoc(AboutUs);
+export default LandingPageHoc(AboutUs);

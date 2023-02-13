@@ -4,7 +4,7 @@ function Footer() {
     const currentYear = new Date().getFullYear();
     return (
       <div>
-        <footer className="footer">
+        <footer className="footer py-top-30">
           <div className="container-fluid text-center">
             <div className="row">
               <div className="col align-self-center">
