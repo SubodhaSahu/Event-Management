@@ -1,23 +1,26 @@
 import express from 'express';
 import wrapAsynch from '../utils/AsynchErrorHandle.js';
-import Event from '../models/events.js';
-import eventSeeds from '../seeds/events.js';
+import eventDb from '../data-access/event-db/index.js';
+
+const {
+  listEvents,
+  eventCount,
+  blukInsert,
+  addEvent,
+  getEventById,
+  updateEventById,
+  deleteEventById,
+} = eventDb;
 
 const eventRouter = express.Router();
-// eventRouter.get('/', (req, res) => {
-//   res.send("hello I'm runnig 4000");
-// });
 
 /** ************Event API Using Mongo ************* */
 
-// Used Only to push some data initially
-
+// Used Only to push some muck data initially
 eventRouter.post(
   '/many',
   wrapAsynch(async (req, res) => {
-    await Event.insertMany(eventSeeds);
-    // .then(data => console.log(data))
-    // .catch(e => console.log(e))
+    await blukInsert();
   })
 );
 
@@ -31,13 +34,10 @@ eventRouter.get(
     }
 
     // get the events
-    const events = await Event.find({});
-    // .limit(limit * 1)
-    // .skip((page - 1) * limit);
-    // console.log(Event);
+    const events = await listEvents(page, limit);
 
     // get total documents in the Events collection
-    const count = await Event.countDocuments();
+    const count = await eventCount();
 
     // return response with events, total pages, and current page
     res.json({
@@ -52,8 +52,7 @@ eventRouter.get(
 eventRouter.post(
   '/',
   wrapAsynch(async (req, res) => {
-    const newEvent = new Event(req.body);
-    await newEvent.save();
+    const newEvent = await addEvent(req.body);
     res.status(201).json(newEvent._id);
   })
 );
@@ -62,8 +61,7 @@ eventRouter.post(
 eventRouter.get(
   '/:id',
   wrapAsynch(async (req, res) => {
-    const { id } = req.params;
-    const event = await Event.findById(id);
+    const event = await getEventById(req.params);
     res.status(200).json(event);
   })
 );
@@ -72,10 +70,7 @@ eventRouter.put(
   '/:id',
   wrapAsynch(async (req, res) => {
     const { id } = req.params;
-    const event = await Event.findByIdAndUpdate(id, req.body, {
-      runValidators: true,
-      new: true,
-    });
+    const event = await updateEventById(id, req.body);
     res.status(200).json(event);
   })
 );
@@ -84,7 +79,7 @@ eventRouter.delete(
   '/:id',
   wrapAsynch(async (req, res) => {
     const { id } = req.params;
-    const event = await Event.findByIdAndDelete(id);
+    const event = await deleteEventById(id);
     res.status(200).json(event);
   })
 );

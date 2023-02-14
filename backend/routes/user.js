@@ -1,7 +1,8 @@
 import express from 'express';
 import wrapAsynch from '../utils/AsynchErrorHandle.js';
-import User from '../models/users.js';
-import userSeeds from '../seeds/users.js';
+import userDb from '../data-access/user-db/index.js';
+
+const { blukInsert, addUser, getByEmail, getUsers } = userDb;
 
 const userRouter = express.Router();
 
@@ -9,17 +10,23 @@ const userRouter = express.Router();
 userRouter.post(
   '/many',
   wrapAsynch(async (req, res) => {
-    await User.insertMany(userSeeds)
-      .then((data) => console.log(data))
-      .catch((e) => console.log(e));
+    await blukInsert(userSeeds);
+  })
+);
+
+//Get All User
+userRouter.get(
+  '/',
+  wrapAsynch(async (req, res) => {
+    const user = await getUsers();
+    res.status(201).json(user);
   })
 );
 
 userRouter.post(
   '/',
   wrapAsynch(async (req, res) => {
-    const newUser = new User(req.body);
-    await newUser.save();
+    const newUser = await addUser(req.body);
     res.status(201).json(newUser._id);
   })
 );
@@ -27,7 +34,7 @@ userRouter.post(
 userRouter.post(
   '/login',
   wrapAsynch(async (req, res) => {
-    const userF = User.findOne({ email: req.body.email });
+    const userF = getByEmail(req.body.email);
     userF
       .then((data) => {
         // Means user present so validate the password
