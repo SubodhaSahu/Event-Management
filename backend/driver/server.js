@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import routers from '../routes/seeting.js';
 import DB from '../db/mongodb/connection.js';
-import config from '../config/index.js';
 
 const app = express();
 app.use(express.json());
@@ -14,7 +13,7 @@ routers(app);
 DB.connect();
 
 app.get('/', (req, res) => {
-  res.json(config);
+  res.json('You appear to have accessed a URL that has no content. ');
 });
 
 /*******Example Code for future refernces */
