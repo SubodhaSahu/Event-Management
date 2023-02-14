@@ -14,8 +14,8 @@ let mongoURL = config.mongo.MONGO_URL;
 //   mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 // }
 
-const username = encodeURIComponent(config.mongo.MONGO_USER);
-const password = encodeURIComponent(config.mongo.MONGO_PW);
+const username = encodeURIComponent('mongo-mern');
+const password = encodeURIComponent('mongo@123');
 mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 export default {
