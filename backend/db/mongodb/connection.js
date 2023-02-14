@@ -7,12 +7,12 @@ const dbName = encodeURIComponent('eventManagement');
 let env = process.env.NODE_ENV;
 let mongoURL = config.mongo.MONGO_URL;
 
-if (env === 'production') {
-  //get mogo atlas URL
-  const username = encodeURIComponent(config.mongo.MONGO_USER);
-  const password = encodeURIComponent(config.mongo.MONGO_PW);
-  mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-}
+// if (env === 'production') {
+//   //get mogo atlas URL
+//   const username = encodeURIComponent(config.mongo.MONGO_USER);
+//   const password = encodeURIComponent(config.mongo.MONGO_PW);
+//   mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+// }
 
 // const username = encodeURIComponent('mongo-mern');
 // const password = encodeURIComponent('mongo@123');
@@ -20,6 +20,7 @@ if (env === 'production') {
 
 export default {
   connect() {
+    mongoose.set('strictQuery', false);
     mongoose
       .connect(mongoURL, { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => {

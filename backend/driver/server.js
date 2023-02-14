@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import routers from '../routes/seeting.js';
 import DB from '../db/mongodb/connection.js';
+import config from '../config/index.js';
 
 const app = express();
 app.use(express.json());
@@ -13,7 +14,7 @@ routers(app);
 DB.connect();
 
 app.get('/', (req, res) => {
-  res.json('Hello');
+  res.json(config);
 });
 
 /*******Example Code for future refernces */
