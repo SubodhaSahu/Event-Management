@@ -6,14 +6,17 @@ const dbName = encodeURIComponent('eventManagement');
 // Set environment variables
 let env = process.env.NODE_ENV;
 let mongoURL = config.mongo.MONGO_URL;
-console.log(env);
 
-if (env === 'production') {
-  //get mogo atlas URL
-  const username = encodeURIComponent(config.mongo.MONGO_USER);
-  const password = encodeURIComponent(config.mongo.MONGO_PW);
-  mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-}
+// if (env === 'production') {
+//   //get mogo atlas URL
+//   const username = encodeURIComponent(config.mongo.MONGO_USER);
+//   const password = encodeURIComponent(config.mongo.MONGO_PW);
+//   mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+// }
+
+const username = encodeURIComponent(config.mongo.MONGO_USER);
+const password = encodeURIComponent(config.mongo.MONGO_PW);
+mongoURL = `mongodb+srv://${username}:${password}@cluster0.y4ibni5.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 export default {
   connect() {

@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import routers from '../routes/seeting.js';
 import DB from '../db/mongodb/connection.js';
-console.log('Here');
 
 const app = express();
 app.use(express.json());
