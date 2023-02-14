@@ -1,7 +1,7 @@
 import eventRouter from './event.js';
 import userRouter from './user.js';
 
-export default function (app) {
+export default function routers(app) {
   // // Event Routers
   app.use('/event', eventRouter);
   app.use('/user', userRouter);
