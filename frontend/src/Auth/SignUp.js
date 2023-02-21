@@ -1,5 +1,5 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -9,8 +9,52 @@ import {
 } from '@fortawesome/fontawesome-free-solid';
 import { Link } from 'react-router-dom';
 import CommonHoc from './CommonHoc';
+import Loader from '../UI/Loader';
+import ShowAlert from '../UI/ShowAlert';
+
+const apiURL = `${process.env.REACT_APP_API}/users`;
+const defaultErrorMessage = 'Something went wrong';
 
 function Signup() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
+
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError('Password and confirm password should be same');
+      return;
+    }
+    setIsLoading(true); // Show the loader
+    axios
+      .post(apiURL, {
+        name,
+        email,
+        password
+      })
+      .then((response) => {
+        // console.log(response);
+        resetForm();
+        setSuccessMsg(response.data.message || 'User Created Successfully');
+      }).catch((err) => {
+        const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;
+        setError(errMsg);
+      }).finally(() => {
+        setIsLoading(false); // Hide the Loader
+      });
+  };
   return (
     <div>
       <p className="text-center h6 fw-bold mb-2">Create Account</p>
@@ -23,19 +67,39 @@ function Signup() {
         {' '}
         here
       </p>
-      <form className="mx-1 mx-md-4">
+
+      {/* Show The Loader */}
+      <div className="pb-2">
+        {isLoading && <Loader /> }
+      </div>
+      <form className="mx-1 mx-md-4" onSubmit={handleSubmit}>
+
+        {/* Show The Success Message */}
+        { successMsg && (
+          <ShowAlert className="success">
+            {successMsg}
+          </ShowAlert>
+        )}
+
+        {/* Show The Error  Message */}
+        { error && (
+        <ShowAlert className="danger">
+          {error}
+        </ShowAlert>
+        )}
         <div className="d-flex flex-row align-items-center mb-4">
           <FontAwesomeIcon icon={faUser} className="me-3 fs-4" />
           <div className="form-outline flex-fill mb-0">
             <input
               type="text"
-              id="inputField"
+              id="name"
+              name="name"
               className="form-control"
               placeholder="Name"
+              value={name}
+              required
+              onChange={e => setName(e.target.value)} 
             />
-            <label className="formLabel d-none" htmlFor="inputField">
-              Name
-            </label>
           </div>
         </div>
 
@@ -44,13 +108,13 @@ function Signup() {
           <div className="form-outline flex-fill mb-0">
             <input
               type="email"
-              id="form3Example3c"
+              id="email"
               className="form-control"
               placeholder="Email"
+              value={email}
+              required
+              onChange={e => setEmail(e.target.value)} 
             />
-            <label className="form-label d-none" htmlFor="form3Example3c">
-              Your Email
-            </label>
           </div>
         </div>
 
@@ -59,13 +123,13 @@ function Signup() {
           <div className="form-outline flex-fill mb-0">
             <input
               type="password"
-              id="form3Example4c"
+              id="password"
               className="form-control"
               placeholder="Password"
+              value={password}
+              required
+              onChange={e => setPassword(e.target.value)} 
             />
-            <label className="form-label d-none" htmlFor="form3Example4c">
-              Password
-            </label>
           </div>
         </div>
 
@@ -74,13 +138,14 @@ function Signup() {
           <div className="form-outline flex-fill mb-0">
             <input
               type="password"
-              id="form3Example4cd"
+              id="confirmPassword"
               className="form-control"
               placeholder="Repeat your password"
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)} 
+              required
             />
-            <label className="form-label d-none" htmlFor="form3Example4cd">
-              Repeat your password
-            </label>
           </div>
         </div>
         <div className="form-check d-flex justify-content-center mb-5">
@@ -89,6 +154,7 @@ function Signup() {
             type="checkbox"
             value=""
             id="form2Example3c"
+            required
           />
           <label className="form-check-label" htmlFor="form2Example3">
             I agree all statements in 
@@ -98,7 +164,7 @@ function Signup() {
         </div>
 
         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-          <button type="button" className="btn btn-outline-primary ">
+          <button type="submit" className="btn btn-outline-primary" disabled={isLoading}>
             Register
           </button>
         </div>

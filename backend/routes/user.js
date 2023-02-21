@@ -2,7 +2,8 @@ import express from 'express';
 import wrapAsynch from '../utils/AsynchErrorHandle.js';
 import userDb from '../data-access/user-db/index.js';
 
-const { blukInsert, addUser, getByEmail, getUsers } = userDb;
+const { blukInsert, addUser, getByEmail, validateCredential, getUsers } =
+  userDb;
 
 const userRouter = express.Router();
 
@@ -36,9 +37,12 @@ userRouter.post(
   wrapAsynch(async (req, res) => {
     const userF = getByEmail(req.body.email);
     userF
-      .then((data) => {
-        // Means user present so validate the password
-        if (req.body.password === data.password) {
+      .then(async (data) => {
+        const match = await validateCredential(
+          req.body.email,
+          req.body.password
+        );
+        if (match) {
           res.status(200).json({
             success: true,
             message: 'Login successful',
@@ -58,67 +62,5 @@ userRouter.post(
       });
   })
 );
-
-/** ********** User API endpoint using file system */
-/*
-router.post("/login", async (req, res) => {
-    let user = checkEmail(users, req.body.email);
-    if (user) {
-        if (req.body.password === user.password) {
-            res.status(200).json({
-                success: true,
-                message: 'Login successful',
-                user: user
-            });
-        } else {
-            res.status(401).json({
-                success: false,
-                message: 'Invalid Credential',
-            });
-        }
-    } else {
-        res.status(401).json({
-            success: false,
-            message: 'Invalid Email',
-        });
-    }
-});
-*/
-
-/** 
-//Commented the code as vercel unable to read the file
-const jsonFile = path.join(process.cwd(), 'json') + '/users.json';
-
-router.post("/login", async (req, res) => {
-    fs.readFile(jsonFile)
-        .then((data) => {
-            let users = JSON.parse(data);
-            let user = checkEmail(users, req.body.email); 
-            if (user) {
-                if (req.body.password === user.password) {
-                    res.status(200).json({
-                        success: true,
-                        message: 'Login successful',
-                        user : user
-                    });
-                } else {
-                    res.status(401).json({
-                        success: false,
-                        message: 'Invalid Credential',
-                    });
-                }
-            } else {
-                res.status(401).json({
-                    success: false,
-                    message: 'Invalid Email',
-                });
-            }
-            
-    })
-    .catch((error) => {
-        res.json(error)    
-    });  
-});
-*/
 
 export default userRouter;

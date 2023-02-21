@@ -14,8 +14,8 @@ const eventShema = new Schema({
     required: [true, 'Please provide the event date'],
   },
   eventVenue: {
-    type: String,
-    required: [true, 'Please provide the event venue'],
+    type: Schema.Types.ObjectId,
+    ref: 'Venue',
   },
 });
 

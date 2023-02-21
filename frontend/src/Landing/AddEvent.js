@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import LandingPageHoc from './LanndingPageHoc';
 
-const apiURL = `${process.env.REACT_APP_API}/event`;
+const apiURL = `${process.env.REACT_APP_API}/events`;
 
 function AddEvent() {
   const { id = 0 } = useParams(); 

@@ -11,7 +11,8 @@ function wrapAsynch(fn) {
   return function (req, res, next) {
     fn(req, res, next).catch((error) => {
       // next(error);
-      let { message = error } = error;
+      let { message = 'Unexpected error' } = error;
+
       if (error.name === 'ValidationError') {
         message = mongoshValidator(error);
       }

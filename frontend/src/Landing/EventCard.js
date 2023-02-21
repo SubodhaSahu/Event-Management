@@ -15,7 +15,7 @@ function EventCard({ event }) {
             <p className="card-subtitle mt-3 mb-2 fw-lighter fs-6">
               <FontAwesomeIcon icon={faMapMarker} /> 
               {' '}
-              {event.eventVenue} 
+              {event.eventVenue.name} 
             </p>
             <p className="card-subtitle mt-3 mb-2 text-success fs-6"> 
               {' '}

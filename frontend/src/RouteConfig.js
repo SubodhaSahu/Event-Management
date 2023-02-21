@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Signup from './Auth/SignUp';
-import Login from './Auth/Login';
-import Index from './Landing/Index';
-import AddEvent from './Landing/AddEvent';
-import AboutUs from './Landing/AboutUs';
-import PrivacyPolicy from './Landing/PrivacyPolicy';
 import Logout from './Landing/Logout';
+
+// Lazy Loading Route
+const Login = lazy(() => import('./Auth/Login'));
+const Index = lazy(() => import('./Landing/Index'));
+const AddEvent = lazy(() => import('./Landing/AddEvent'));
+const AboutUs = lazy(() => import('./Landing/AboutUs'));
+const PrivacyPolicy = lazy(() => import('./Landing/PrivacyPolicy'));
 
 const router = createBrowserRouter([
   {
@@ -19,27 +21,51 @@ const router = createBrowserRouter([
   },
   {
     path: 'login',
-    element: <Login />,
+    element: (
+      <Suspense fallback={<p>Loading...</p>}>
+        <Login />
+      </Suspense>
+    )
   },
   {
     path: 'dashboard',
-    element: <Index />,
+    element: (
+      <Suspense fallback={<p>Loading...</p>}>
+        <Index />
+      </Suspense>
+    )
   },
   {
     path: 'add-event',
-    element: <AddEvent />,
+    element: (
+      <Suspense fallback={<p>Loading...</p>}>
+        <AddEvent />
+      </Suspense>
+    )
   },
   {
     path: 'edit-event/:id',
-    element: <AddEvent />,
+    element: (
+      <Suspense fallback={<p>Loading...</p>}>
+        <AddEvent />
+      </Suspense>
+    )
   },
   {
     path: 'about-us',
-    element: <AboutUs />,
+    element: (
+      <Suspense fallback={<p>Loading...</p>}>
+        <AboutUs />
+      </Suspense>
+    )
   },
   {
     path: 'privacy-policy',
-    element: <PrivacyPolicy />,
+    element: (
+      <Suspense fallback={<p>Loading...</p>}>
+        <PrivacyPolicy />
+      </Suspense>
+    )
   },
   {
     path: 'logout',

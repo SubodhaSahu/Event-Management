@@ -1,25 +1,30 @@
 {
-    "extends": "airbnb",
-    "root": true,
-    "parserOptions": {
-      "requireConfigFile": false,
-      "babelOptions": {
-        "presets": ["@babel/preset-react"]
-      }
-    },
-    "plugins": ["react"],
-    "rules": {    
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],    
-      "implicit-arrow-linebreak": "off",    
-      "comma-dangle": "off",    
-      "indent": "off",    
-      "no-trailing-spaces": "off",
-      "import/no-named-as-default-member" : "off",
-      "import/no-unresolved" : "off",
-      "import/no-named-as-default" : "off",
-      "arrow-parens": "off",
-      "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
-      "no-underscore-dangle": "off",
-      "react/prop-types" : "off"
+  "extends": "airbnb",
+  "root": true,
+  "parserOptions": {
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
     }
+  },
+  "plugins": ["react"],
+  "globals": {
+    "localStorage": true,
+    "fetch": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "implicit-arrow-linebreak": "off",
+    "comma-dangle": "off",
+    "indent": "off",
+    "no-trailing-spaces": "off",
+    "import/no-named-as-default-member": "off",
+    "import/no-unresolved": "off",
+    "import/no-named-as-default": "off",
+    "arrow-parens": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "no-underscore-dangle": "off",
+    "react/prop-types": "off",
+    "allowImportExportEverywhere": "off"
   }
+}

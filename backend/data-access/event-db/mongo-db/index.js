@@ -1,8 +1,14 @@
 import Event from '../../../db/mongodb/models/events.js';
-import eventSeeds from '../../../db/mongodb/models/events.js';
+import eventSeeds from '../../../db/mongodb/seeds/events.js';
+import Venue from '../../../db/mongodb/models/venues.js';
 
-// get total documents in the Events collection
+
+// Insert the bluck record
 export async function blukInsert() {
+  const venue = await Venue.findOne({ name: 'Time & Life Buildilng' });
+  eventSeeds.map((eventInfo) => {
+    eventInfo.eventVenue = venue;
+  });
   return await Event.insertMany(eventSeeds);
 }
 
@@ -14,21 +20,23 @@ export async function eventCount() {
 // get the events
 export async function listEvents(page, limit) {
   return await Event.find({})
+    .populate('eventVenue', 'name')
     .limit(limit * 1)
     .skip((page - 1) * limit);
 }
 
 // Add a new event
 export async function addEvent(eventInfo) {
-  const newEvent = new Event(eventInfo);
-  await newEvent.save();
-  return newEvent;
+  const venue = await Venue.findById(eventInfo.eventVenue);
+  eventInfo.eventVenue = venue;
+  let newEvent = new Event(eventInfo);
+
+  return await newEvent.save();
 }
 
 // Get the event By ID
 export async function getEventById({ id }) {
-  const event = await Event.findById(id);
-  return event;
+  return await Event.findById(id).populate('eventVenue');
 }
 
 // update the event by id

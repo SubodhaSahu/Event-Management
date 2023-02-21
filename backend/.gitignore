@@ -1,5 +1,6 @@
 /node_modules
 /views
+/josn
 
 .env.local
 .env

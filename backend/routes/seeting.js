@@ -1,16 +1,12 @@
 import eventRouter from './event.js';
 import userRouter from './user.js';
+import venueRouter from './venue.js';
+import serverRouter from './test.js';
 
 export default function routers(app) {
   // // Event Routers
-  app.use('/event', eventRouter);
-  app.use('/user', userRouter);
+  app.use('/events', eventRouter);
+  app.use('/users', userRouter);
+  app.use('/venues', venueRouter);
+  app.use('/test', serverRouter);
 }
-
-// // User Routers
-//app.use('/user', userRouter);
-
-// export const router = {
-//   eventRouter,
-//   userRouter,
-// };
