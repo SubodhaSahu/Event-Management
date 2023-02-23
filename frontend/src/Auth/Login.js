@@ -7,7 +7,7 @@ import CommonHoc from './CommonHoc';
 import AuthContext from '../context/AuthProvider';
 import Loader from '../UI/Loader';
 
-const apiURL = `${process.env.REACT_APP_API}/users/login`;
+const apiURL = `${process.env.REACT_APP_API}users/login`;
 const defaultErrorMessage = 'Something went wrong';
 
 function Login() {

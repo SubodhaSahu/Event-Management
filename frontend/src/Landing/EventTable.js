@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import EventCard from './EventCard';
 
-const apiURL = `${process.env.REACT_APP_API}/events`;
+const apiURL = `${process.env.REACT_APP_API}events`;
 
 function EventTable() {
   const [events, setEvents] = useState(null);

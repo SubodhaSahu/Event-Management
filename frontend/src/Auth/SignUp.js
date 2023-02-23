@@ -12,7 +12,7 @@ import CommonHoc from './CommonHoc';
 import Loader from '../UI/Loader';
 import ShowAlert from '../UI/ShowAlert';
 
-const apiURL = `${process.env.REACT_APP_API}/users`;
+const apiURL = `${process.env.REACT_APP_API}users`;
 const defaultErrorMessage = 'Something went wrong';
 
 function Signup() {
@@ -45,7 +45,6 @@ function Signup() {
         password
       })
       .then((response) => {
-        // console.log(response);
         resetForm();
         setSuccessMsg(response.data.message || 'User Created Successfully');
       }).catch((err) => {

@@ -28,11 +28,6 @@ export default {
       })
       .catch((err) => {
         console.log('OH NO MONGO CONNECTION ERROR!!!!');
-        console.log(config.mongo.MONGO_USER);
-        console.log(config.mongo.MONGO_PW);
-        console.log(config.mongo.env);
-
-        console.log(err);
       });
   },
 };
