@@ -27,8 +27,18 @@ userRouter.get(
 userRouter.post(
   '/',
   wrapAsynch(async (req, res) => {
-    const newUser = await addUser(req.body);
-    res.status(201).json(newUser._id);
+    const userF = await getByEmail(req.body.email);
+
+    //Check if user exist
+    if (userF) {
+      res.status(422).json({
+        success: false,
+        message: 'User already exists. Try with a different email.',
+      });
+    } else {
+      const newUser = await addUser(req.body);
+      res.status(201).json(newUser._id);
+    }
   })
 );
 
