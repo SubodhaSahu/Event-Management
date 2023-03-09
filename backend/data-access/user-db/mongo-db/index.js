@@ -25,7 +25,7 @@ export async function addUser(userInfo) {
 
 // add a new user
 export async function getByEmail(email) {
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email }, { __v: 0 });
   return user;
 }
 

@@ -5,12 +5,17 @@
     "requireConfigFile": false,
     "babelOptions": {
       "presets": ["@babel/preset-react"]
-    }
+    },
+    "allowImportExportEverywhere": true,
+     // Required for certain syntax usages
+    "ecmaVersion": 2020
   },
   "plugins": ["react"],
   "globals": {
     "localStorage": true,
-    "fetch": true
+    "fetch": true,
+    "window": true,
+    "document": true
   },
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
@@ -24,7 +29,6 @@
     "arrow-parens": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "no-underscore-dangle": "off",
-    "react/prop-types": "off",
-    "allowImportExportEverywhere": "off"
+    "react/prop-types": "off"
   }
 }

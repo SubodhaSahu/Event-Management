@@ -53,9 +53,12 @@ userRouter.post(
           req.body.password
         );
         if (match) {
+          let { _id, email, name } = data; //Get the User info
+
           res.status(200).json({
             success: true,
             message: 'Login successful',
+            userInfo: { _id: _id, name: name, email: email },
           });
         } else {
           res.status(401).json({
@@ -65,6 +68,7 @@ userRouter.post(
         }
       })
       .catch((e) => {
+        console.log(e);
         res.status(401).json({
           success: false,
           message: 'Invalid Email',

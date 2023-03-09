@@ -1,10 +1,10 @@
 import React from 'react';
 
-function ShowAlert({ children, className }) {
+function ShowAlert({ children, className, closeAlert = '' }) {
     return (
-      <div className={`alert alert-${className || 'light'}`} role="alert">
+      <div className={`alert alert-${className || 'light'}`} role="alert" aria-live="assertive">
         {children || 'Default Success Message'}
-        <button type="button" className="btn-close float-end" data-bs-dismiss="alert" aria-label="Close" />
+        <button type="button" className="btn-close float-end" aria-label="Close" onClick={closeAlert} />
       </div>
     );
 }

@@ -1,28 +1,34 @@
 import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Signup from './Auth/SignUp';
-import Logout from './Landing/Logout';
+import SignUp from './components/SignUp';
+import ErrorPage from './components/Pages/ErrorPage';
+import RequireAuth from './components/RequireAuth';
 
 // Lazy Loading Route
-const Login = lazy(() => import('./Auth/Login'));
-const Index = lazy(() => import('./Landing/Index'));
-const AddEvent = lazy(() => import('./Landing/AddEvent'));
-const AboutUs = lazy(() => import('./Landing/AboutUs'));
-const PrivacyPolicy = lazy(() => import('./Landing/PrivacyPolicy'));
+const Login = lazy(() => import('./components/Login'));
+const Index = lazy(() => import('./components/Dashboard/index'));
+const CreateEvent = lazy(() => import('./components/Events/CreateEvent'));
+const Venues = lazy(() => import('./components/Venues/index'));
+const CreateVenues = lazy(() => import('./components/Venues/createVenue'));
+const AboutUs = lazy(() => import('./components/Pages/AboutUs'));
+const PrivacyPolicy = lazy(() => import('./components/Pages/PrivacyPolicy'));
+
+const ROLES = ['User', 'Admin'];
+const { suspenseFallbackEle } = '<p>Loading...</p>';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Signup />,
+    element: <SignUp />,
   },
   {
     path: 'signup',
-    element: <Signup />,
+    element: <SignUp />,
   },
   {
     path: 'login',
     element: (
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={suspenseFallbackEle}>
         <Login />
       </Suspense>
     )
@@ -30,46 +36,76 @@ const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: (
-      <Suspense fallback={<p>Loading...</p>}>
-        <Index />
+      <Suspense fallback={suspenseFallbackEle}>
+        <RequireAuth redirectTo="/login" allowedRoles={ROLES}>
+          <Index />     
+        </RequireAuth>
       </Suspense>
     )
   },
   {
     path: 'add-event',
     element: (
-      <Suspense fallback={<p>Loading...</p>}>
-        <AddEvent />
-      </Suspense>
+      <RequireAuth redirectTo="/login" allowedRoles={ROLES}>
+        <Suspense fallback={suspenseFallbackEle}>
+          <CreateEvent />
+        </Suspense>
+      </RequireAuth>
     )
   },
   {
     path: 'edit-event/:id',
     element: (
-      <Suspense fallback={<p>Loading...</p>}>
-        <AddEvent />
-      </Suspense>
+      <RequireAuth redirectTo="/login" allowedRoles={ROLES}>
+        <Suspense fallback={suspenseFallbackEle}>
+          <CreateEvent />
+        </Suspense>
+      </RequireAuth>
+    )
+  },
+  {
+    path: 'venues',
+    element: (
+      <RequireAuth redirectTo="/login" allowedRoles={[ROLES[1]]}>
+        <Suspense fallback={suspenseFallbackEle}>
+          <Venues />
+        </Suspense>
+      </RequireAuth>
+    )
+  },
+  {
+    path: 'add-venue',
+    element: (
+      <RequireAuth redirectTo="/login" allowedRoles={[ROLES[1]]}>
+        <Suspense fallback={suspenseFallbackEle}>
+          <CreateVenues />
+        </Suspense>
+      </RequireAuth>
     )
   },
   {
     path: 'about-us',
     element: (
-      <Suspense fallback={<p>Loading...</p>}>
-        <AboutUs />
-      </Suspense>
+      <RequireAuth redirectTo="/login" allowedRoles={ROLES}>
+        <Suspense fallback={suspenseFallbackEle}>
+          <AboutUs />
+        </Suspense>
+      </RequireAuth>
     )
   },
   {
     path: 'privacy-policy',
-    element: (
-      <Suspense fallback={<p>Loading...</p>}>
-        <PrivacyPolicy />
-      </Suspense>
+        element: (
+          <RequireAuth redirectTo="/login" allowedRoles={ROLES}>
+            <Suspense fallback={suspenseFallbackEle}>
+              <PrivacyPolicy />
+            </Suspense>
+          </RequireAuth>
     )
   },
   {
-    path: 'logout',
-    element: <Logout />,
+    path: '*',
+    element: <ErrorPage />,
   }
   
 ]);

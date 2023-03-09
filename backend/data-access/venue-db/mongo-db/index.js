@@ -10,3 +10,13 @@ export async function bulkInsert() {
 export async function listVenues() {
   return await Venue.find({});
 }
+
+export async function addVenue(venue) {
+  let newVenue = new Venue(venue);
+  return await newVenue.save();
+}
+
+// Get the event By ID
+export async function getVenueById({ id }) {
+  return await Venue.findById(id);
+}
