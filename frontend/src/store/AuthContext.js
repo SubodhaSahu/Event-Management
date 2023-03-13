@@ -9,8 +9,8 @@ const AuthContext = createContext({
 });
 
 export function AuthContextProvider(props) {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [userInfo, setUserInfo] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     const storedUserLoggedInInformation = localStorage.getItem('isLoggedIn');
@@ -32,10 +32,12 @@ export function AuthContextProvider(props) {
 
   const loginHandler = (userDetail) => {
     const userInfoJson = JSON.parse(userDetail);
+    console.log(userInfoJson);
     localStorage.setItem('isLoggedIn', '1');
     localStorage.setItem('userInfo', userDetail);
     setUserInfo({ ...userInfoJson });
     setIsLoggedIn(true);
+    return true;
   };
     
   const value = useMemo(() => ({

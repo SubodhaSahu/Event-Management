@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import userService from "../services/User";
 import wrapAsync from "../utils/AsynchErrorHandle";
 import { HttpCode, config } from "../config/config";
@@ -62,35 +61,4 @@ const deleteUserById  = wrapAsync(async (req: Request, res: Response) => {
     }
 })
 
-const login = wrapAsync(async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    const userDetails = await userService.getUserByEmail(email);
-    
-      //user exist
-    if (userDetails) {
-        const match = await userService.validateCredential(email, password);
-        if (match) {
-            const role = userDetails.role == 1 ? 'Admin' : 'User';
-           
-            // Issue token
-            const userId = userDetails.id;
-            const secretKey = config.SECRET_KEY;
-            const payload = { userId };
-            const token = jwt.sign(payload, config.SECRET_KEY, {
-                expiresIn: '1h'
-            });
-            res.status(HttpCode.OK).json({
-                success: true,
-                message: 'Login successful',
-                userInfo: { name: userDetails.name, email, role },
-                token: token
-            });
-        } else {
-             res.status(HttpCode.UNAUTHORIZED).json({success: false,message: 'Invalid Credential'});
-        }      
-    } else {
-        res.status(HttpCode.UNAUTHORIZED).json({success: false,message: 'Invalid Credential'});
-    }
-})
-
-export default {readAll, createUser, getUserById, updateUserById, deleteUserById, login}
+export default {readAll, createUser, getUserById, updateUserById, deleteUserById}

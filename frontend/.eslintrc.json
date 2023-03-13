@@ -10,14 +10,19 @@
      // Required for certain syntax usages
     "ecmaVersion": 2020
   },
-  "plugins": ["react"],
+  "plugins": ["react", "jest"],
   "globals": {
     "localStorage": true,
     "fetch": true,
     "window": true,
     "document": true
   },
+  "env": {
+    "jest/globals": true
+  },
   "rules": {
+     // suppress errors for missing 'import React' in files
+   "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "implicit-arrow-linebreak": "off",
     "comma-dangle": "off",

@@ -18,6 +18,7 @@ function wrapAsync(fn : Function) {
     fn(req, response, next).catch((exception: Error) => {
       const statusCode = (exception as any)?.httpStatus || HttpCode.UNPROCESSABLE_ENTITY;
       let errorMsg = (exception as any)?.message || 'Unexpected Error';
+      console.log(exception);
     
       if ((exception as any)?.name === 'ValidationError') {
         errorMsg  = validationError(exception);

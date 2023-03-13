@@ -5,6 +5,7 @@ import authorRoutes from '../routes/Author';
 import eventRoutes from '../routes/Events';
 import userRoutes from '../routes/User';
 import venueRoutes from '../routes/Venues';
+import authRouhtes from '../routes/Auth'
 
 const app = express();
 
@@ -48,7 +49,8 @@ const startServer = () => {
     app.use('/authors', authorRoutes);
     app.use('/events', eventRoutes);
     app.use('/users', userRoutes);
-    app.use('/venues', venueRoutes)
+    app.use('/venues', venueRoutes);
+    app.use('/auth', authRouhtes)
     
 
     /** Error handling */

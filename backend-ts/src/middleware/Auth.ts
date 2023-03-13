@@ -12,10 +12,11 @@ export const AuthMiddleWare = async (req : Request, res: Response, next :NextFun
             next();       
         } else {
             Logging.error('Auth Token required in the header');
-            return res.status(HttpCode.UNAUTHORIZED).json('Auth Token required in the header as Authorization ');
+            return res.status(HttpCode.UNAUTHORIZED).json({ message: 'Auth Token required in the header as Authorization ' });
         }
     } catch (error) {
         Logging.error(error);
-        return res.status(HttpCode.UNAUTHORIZED).json({ error });
+        let errorMsg = (error as any)?.message || 'Unexpected Error';
+        return res.status(HttpCode.UNAUTHORIZED).json({ message: errorMsg });
     }
 }

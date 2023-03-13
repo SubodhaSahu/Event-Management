@@ -34,9 +34,19 @@ function Login() {
 
     try {
       const response = await apis.login({ email, password });
-      const userInfo = JSON.stringify(response.data.userInfo);
-      onLoginSetAuth(userInfo);
-      navigate('/dashboard');
+      const { userInfo } = response.data;
+
+      // Set Token and Refresh token in the local storage
+      const token = response.data.token || '';
+      const refreshToken = response.data.refreshToken || '';
+      userInfo.token = token;
+      userInfo.refreshToken = refreshToken;
+      localStorage.setItem('token', JSON.stringify(token));
+      localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+      if (onLoginSetAuth(JSON.stringify(userInfo))) {
+        navigate('/dashboard');
+        window.location.reload(); // For first attempt it's unable to read from local storage
+      }
     } catch (err) {
       const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;
       setError(errMsg);

@@ -3,10 +3,11 @@ import Repository from './Repository';
 const userUrl = 'users';
 const eventUrl = 'events';
 const venueUrl = 'venues';
+const authUrl = 'auth';
 
 const apis = {
     login(payload) {
-        return Repository.post(`${userUrl}/login`, payload);
+        return Repository.post(`${authUrl}/login`, payload);
     },
     signup(payload) {
         return Repository.post(`${userUrl}`, payload);

@@ -82,7 +82,7 @@ const validateCredential = async (email: string, password : string): Promise<Boo
         const user = await Users.findOne({ email: email });
         const match = await bcrypt.compare(password, user!.password);
         return match ? true : false;
-    } catch (error) {     
+    } catch (error) {  
     // Do something with the error
         return Promise.reject(error);
     }

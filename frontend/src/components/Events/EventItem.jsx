@@ -10,8 +10,7 @@ function EventItem({ event }) {
     if (window.confirm('Are you sure to delete this event?')) {
       (async () => {
         try {
-          const response = await apis.deleteEvent(eventId);
-          console.log(response);
+            await apis.deleteEvent(eventId);
         } catch (error) {
           console.log(error);
         }
