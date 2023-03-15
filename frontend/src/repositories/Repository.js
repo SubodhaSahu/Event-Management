@@ -1,30 +1,8 @@
 import axios from 'axios';
+import TokenService from './TokenService';
 
 const baseURL = process.env.REACT_APP_API;
 const isLoggedIn = localStorage.getItem('isLoggedIn');
-
-// const getRefreshToken = () => {
-//     let accessToken = '';
-//     if (isLoggedIn) {
-//         let userInfo = localStorage.getItem('userInfo');
-//         userInfo = JSON.parse(userInfo);
-//         accessToken = userInfo.refreshToken || '';
-//     }
-//     return accessToken;
-// };
-
-// Function to refresh the access token using the refresh token
-async function refreshAccessToken() {
-    const accessToken = JSON.parse(localStorage.getItem('refreshToken'));
-    try {
-      const response = await axios.post(`${baseURL}auth/refresh`, {
-        refreshToken: accessToken
-      });
-      return response.data;
-    } catch (err) {
-      return err;
-    }
-}
 
 const _axios = axios.create({
     baseURL
@@ -37,7 +15,7 @@ _axios.interceptors.request.use(
 
         // Set Auth token in the header
         if (isLoggedIn) {
-            const token = JSON.parse(localStorage.getItem('token'));
+            const token = TokenService.getLocalAccessToken();
             configuration.headers.Authorization = token;
         }
         
@@ -54,18 +32,15 @@ _axios.interceptors.response.use(
 (response) => response, 
     (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+
+        if (isLoggedIn && error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             (async () => {
-                const { token, refreshToken } = await refreshAccessToken();
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('token');
-                localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
-                localStorage.setItem('token', JSON.stringify(token));
+                const { token, refreshToken } = await TokenService.refreshAccessToken();
+                TokenService.updateLocalAccessToken(token, refreshToken);
                 axios.defaults.headers.common.Authorization = token;
+                return _axios(originalRequest);
             })();
-
-            return _axios(originalRequest);
         }
         // return Error object with Promise
         return Promise.reject(error);

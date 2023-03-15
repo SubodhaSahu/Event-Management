@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from "mongoose";
 
 type Nullable<T> = T | null;
 
-interface IVenueAddress {
+export interface IVenueAddress {
     street: Nullable<string>,
     city: Nullable<string>,
     state: Nullable<string>,

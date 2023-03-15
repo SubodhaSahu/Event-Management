@@ -10,7 +10,7 @@ const apis = {
         return Repository.post(`${authUrl}/login`, payload);
     },
     signup(payload) {
-        return Repository.post(`${userUrl}`, payload);
+        return Repository.post(`${authUrl}/signup`, payload);
     },
     getEvents() {
         return Repository.get(`${eventUrl}`);
@@ -29,6 +29,18 @@ const apis = {
     },
     getVenue() {
         return Repository.get(`${venueUrl}`);
+    },
+    getVenueById(id) {
+        return Repository.get(`${venueUrl}/${id}`);
+    },
+    postVenue(payload) {
+        return Repository.post(`${venueUrl}`, payload);
+    },
+    putVenue(id, payload) {
+        return Repository.put(`${venueUrl}/${id}`, payload);
+    },
+    getUsers() {
+        return Repository.get(`${userUrl}`);
     }
 };
 

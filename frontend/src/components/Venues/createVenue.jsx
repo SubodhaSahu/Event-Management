@@ -1,48 +1,75 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import DashboardHoc from '../LayoutHoc/DashboardHoc';
-
-const apiURL = `${process.env.REACT_APP_API}venues`;
+import apis from '../../repositories/api';
 
 function CreateVenue() {
-  const { id = 0 } = useParams(); 
-  const [eventTitle, setEventTitle] = useState('');
-  const [eventDesc, setEventDesc] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [eventVenue, setEventVenue] = useState('');
+  const { id = '' } = useParams(); 
+
+  const [name, setName] = useState('');
+  const [address, setAddress] = useState({
+    street: '',
+    city: '',
+    state: '',
+    country: '',
+    zip: ''
+  });
+  
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  const getVenueDetails = async () => {
+    try {
+      const response = await apis.getVenueById(id);   
+      console.log(response);
+      const {
+        address: addr, name: venueName
+      } = response.data.venue;
+      setName(venueName);
+      setAddress(prevState => ({ ...prevState, ...addr }));
+    } catch (err) {
+      setError(err);
+    }
+  };
+
+  const handleAddressChange = e => {
+    const { name: fieldName, value } = e.target;
+    setAddress(prevState => ({
+        ...prevState,
+        [fieldName]: value
+    }));
+};
+
   useEffect(() => {
-    if (id !== '') {
-      axios.get(`${apiURL}/${id}`).then((response) => {
-        const {
-          eventTitle: title, eventDesc: desc,
-          eventDate: date, eventVenue: venue, 
-        } = response.data;
-        setEventTitle(title);
-        setEventDesc(desc);
-        setEventDate(date);
-        setEventVenue(venue);
-      });
+    // Get the data in order to populate while editing
+    if (id !== 0) {
+      getVenueDetails(id);
     }
   }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-      axios
-        .post(apiURL, {
-          eventTitle,
-          eventDesc,
-          eventDate,
-          eventVenue
-        })
-        .then(() => {
-          navigate('/venue');
-        }).catch((err) => {
+    (async () => {
+      const venueDetails = {
+        name,
+        address
+      };
+      try {
+        let response = '';
+
+        // Call Put method for Update and Post for add
+        if (id !== '') {
+          response = await apis.putVenue(id, venueDetails);
+        } else {
+          response = await apis.postVenue(venueDetails);
+        }
+        if (response) {
+          navigate('/venues');
+        }
+      } catch (err) {
           setError(err);
-        });
+      }
+    })();
   };
   if (error) return `Error: ${error.message}`;
   
@@ -54,69 +81,103 @@ function CreateVenue() {
         <div className="col align-items-stretch">
           <div className="card h-100">
             <div className="card-title p-3">
-              <span className="text-center">Add Event </span>
-              <a href="/dashboard" className="btn btn-primary float-end">Go Back</a>
+              <span className="text-center">Add Venue </span>
+              <a href="/venues" className="btn btn-primary float-end">Go Back</a>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1">Title</div>
+                  <div className="col-md-1">Name</div>
                   <div className="col-md-6 form-outline mb-0">
                     <input
                       type="text"
-                      id="eventTitle"
+                      id="name"
                       className="form-control"
-                      aria-describedby="Event Title"
-                      placeholder="Event Title"
-                      name="eventTitle" 
-                      onChange={e => setEventTitle(e.target.value)} 
-                      value={eventTitle}
+                      aria-describedby="Name"
+                      placeholder="Name"
+                      name="name" 
+                      onChange={e => setName(e.target.value)} 
+                      value={name}
                       required
                     />
                   </div>
                 </div>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1"> Description</div>
+                  <div className="col-md-1">Street</div>
                   <div className="col-md-6 form-outline mb-0">
-                    <textarea
+                    <input
+                      type="text"
+                      id="street"
                       className="form-control"
-                      placeholder="Event Description"
-                      id="eventDesc"
-                      name="eventDesc" 
-                      onChange={e => setEventDesc(e.target.value)} 
-                      value={eventDesc}
+                      aria-describedby="street"
+                      placeholder="street"
+                      name="street" 
+                      onChange={handleAddressChange} 
+                      value={address.street}
                       required
                     />
                   </div>
                 </div>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1">Date</div>
+                  <div className="col-md-1">City</div>
                   <div className="col-md-6 form-outline mb-0">
                     <input
                       type="text"
-                      id="eventDate"
+                      id="city"
                       className="form-control"
-                      aria-describedby="Event Date"
-                      placeholder="Event Date"
-                      name="eventDate" 
-                      onChange={e => setEventDate(e.target.value)} 
-                      value={eventDate}
+                      aria-describedby="street"
+                      placeholder="City"
+                      name="city" 
+                      onChange={handleAddressChange} 
+                      value={address.city}
                       required
                     />
                   </div>
                 </div>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1">Venue</div>
+                  <div className="col-md-1">State</div>
                   <div className="col-md-6 form-outline mb-0">
                     <input
                       type="text"
-                      id="eventVenue"
+                      id="state"
                       className="form-control"
-                      aria-describedby="Event Venue"
-                      placeholder="Event Venue"
-                      name="eventVenue" 
-                      onChange={e => setEventVenue(e.target.value)} 
-                      value={eventVenue}
+                      aria-describedby="state"
+                      placeholder="State"
+                      name="state" 
+                      onChange={handleAddressChange} 
+                      value={address.state}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="row  mx-2 my-3">
+                  <div className="col-md-1">Country</div>
+                  <div className="col-md-6 form-outline mb-0">
+                    <input
+                      type="text"
+                      id="country"
+                      className="form-control"
+                      aria-describedby="country"
+                      placeholder="Country"
+                      name="country" 
+                      onChange={handleAddressChange} 
+                      value={address.country}
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="row  mx-2 my-3">
+                  <div className="col-md-1">Zip</div>
+                  <div className="col-md-6 form-outline mb-0">
+                    <input
+                      type="text"
+                      id="zip"
+                      className="form-control"
+                      aria-describedby="Zip or Pin Code"
+                      placeholder="Zip / Pin Code"
+                      name="zip" 
+                      onChange={handleAddressChange} 
+                      value={address.zip}
                       required
                     />
                   </div>

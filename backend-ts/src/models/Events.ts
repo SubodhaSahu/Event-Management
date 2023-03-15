@@ -12,9 +12,18 @@ export interface IEvent {
     eventVenue: Types.ObjectId
 }
 
+//export interface for the public fields
+export interface IEventPublicField {
+  eventTitle: string,
+  eventDesc:  Nullable<string>, // We can do it like this salary: string | null, but used a type for reuse
+  eventDate: string,
+  eventVenue: Types.ObjectId,
+  id: number
+}
+
 // Put all event instance methods in this interface:
 interface IEventMethods {
-  getPublicFields(): {};
+  getPublicFields(): IEventPublicField;
 }
 
 

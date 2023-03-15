@@ -32,12 +32,10 @@ export function AuthContextProvider(props) {
 
   const loginHandler = (userDetail) => {
     const userInfoJson = JSON.parse(userDetail);
-    console.log(userInfoJson);
     localStorage.setItem('isLoggedIn', '1');
     localStorage.setItem('userInfo', userDetail);
     setUserInfo({ ...userInfoJson });
     setIsLoggedIn(true);
-    return true;
   };
     
   const value = useMemo(() => ({

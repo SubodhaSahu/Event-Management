@@ -41,11 +41,10 @@ function Login() {
       const refreshToken = response.data.refreshToken || '';
       userInfo.token = token;
       userInfo.refreshToken = refreshToken;
-      localStorage.setItem('token', JSON.stringify(token));
-      localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
-      if (onLoginSetAuth(JSON.stringify(userInfo))) {
+      onLoginSetAuth(JSON.stringify(userInfo));
+      if (localStorage.getItem('isLoggedIn')) {
         navigate('/dashboard');
-        window.location.reload(); // For first attempt it's unable to read from local storage
+       // window.location.reload(); // For first attempt it's unable to read from local storage
       }
     } catch (err) {
       const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;

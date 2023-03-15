@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/', ValidateJoi(Schemas.event.create),  controller.createEvent);
 router.get('/:eventId', controller.getEventById);
-router.get('/', AuthMiddleWare, controller.readAll);
+router.get('/', controller.readAll);
 router.put('/:eventId', ValidateJoi(Schemas.event.update), controller.updateEventById);
 router.delete('/:eventId', controller.deleteEventById);
 

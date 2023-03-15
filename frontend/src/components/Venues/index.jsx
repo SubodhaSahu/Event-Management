@@ -27,15 +27,19 @@ function Venue() {
               <tr key={venue._id}>
                 <td>{venue.name}</td>
                 <td>
-                  {`${venue.address.street || ' '}, 
-                ${venue.address.city || ''}, 
-                ${venue.address.state || ''},
-                 ${venue.address.zip || ''}`}
+                  {`${venue?.address?.street || ''}, 
+                ${venue?.address?.city || ''}, 
+                ${venue?.address?.state || ''},
+                 ${venue?.address?.zip || ''}`}
                 </td>
                 <td>
                   <button type="button" className="btn btn-link">
                     {' '}
-                    <FontAwesomeIcon icon={faEdit} />
+                    <Link to={`/edit-venue/${venue._id}`} type="btn" className="btn btn-link " title="Edit Venue"> 
+                      {' '}
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Link>
+                   
                     {' '}
                   </button>
                 </td>

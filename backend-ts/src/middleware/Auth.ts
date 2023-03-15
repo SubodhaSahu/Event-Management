@@ -5,6 +5,12 @@ import { HttpCode, config } from '../config/config';
 
 export const AuthMiddleWare = async (req : Request, res: Response, next :NextFunction) => {
     try {
+        //For Unit Test By pass the authentication
+        if (config.env === 'test') {
+            Logging.info('Middle ware for Unit test');
+            return next();    
+        }
+        
         const { authorization } = req.headers;
         if (authorization) {
             const decodedToken = await jwt.verify(authorization, config.SECRET_KEY);

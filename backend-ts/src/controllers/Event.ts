@@ -2,14 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import eventService from "../services/Event";
 import wrapAsync from "../utils/AsynchErrorHandle";
 import { HttpCode } from "../config/config";
+import EventDTO from "../dto/EventDTO";
 
 const createEvent = wrapAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const { eventTitle, eventDesc, eventDate, eventVenue } = req.body;
-    // const venue = await Venue.findOne({ name: 'Time & Life Buildilng' });
-    const eventObj = { id: 0, eventTitle: eventTitle, eventDesc: eventDesc, eventDate: eventDate, eventVenue: eventVenue }
+    const eventObj = new EventDTO(req.body);
     
     const event = await eventService.createEvent(eventObj);
-    res.status(HttpCode.OK).json(event);
+    res.status(HttpCode.CREATED).json(event);
 });
 
 const readAll = wrapAsync(async (req: Request, res: Response, next: NextFunction) => { 
@@ -26,10 +25,8 @@ const getEventById = wrapAsync(async (req: Request, res: Response, next: NextFun
 
 const updateEventById = wrapAsync(async (req: Request, res: Response, next: NextFunction) => { 
     const eventId = req.params.eventId;
-    const { eventTitle, eventDesc, eventDate, eventVenue } = req.body;
-
-    //const venue = await Venue.findOne({ name: 'Time & Life Buildilng' });
-    const eventObj = { eventTitle: eventTitle, eventDesc: eventDesc, eventDate: eventDate, eventVenue: eventVenue }
+    const eventObj = new EventDTO(req.body);
+    
     const events = await eventService.updateEventById(Number(eventId), eventObj);
     return res.status(HttpCode.OK).json({ events });
 })

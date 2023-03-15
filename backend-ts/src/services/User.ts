@@ -1,5 +1,7 @@
 import Users, { IUsers, IUsersModel } from "../models/Users";
 import bcrypt from "bcrypt";
+import { AppError } from "../utils/ErrorHandler";
+import { HttpCode } from "../config/config";
 
 //To Create new User
 const createUser = async (userDetails: IUsers): Promise<{}> => {
@@ -82,9 +84,12 @@ const validateCredential = async (email: string, password : string): Promise<Boo
         const user = await Users.findOne({ email: email });
         const match = await bcrypt.compare(password, user!.password);
         return match ? true : false;
-    } catch (error) {  
-    // Do something with the error
-        return Promise.reject(error);
+    } catch (error) {
+        let errorMsg = (error as any)?.message || 'Unexpected Error';
+        throw new AppError({
+            statusCode: HttpCode.UNAUTHORIZED,
+            message: errorMsg,
+        });
     }
 }
 

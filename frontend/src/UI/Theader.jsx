@@ -6,7 +6,7 @@ function Theader({ columns }) {
        
         <tr>
           {columns.map((column) => (
-            <th key={column}>{column}</th>
+            <th key={column} className="text-center">{column}</th>
             ))}
         </tr>
       </thead>

@@ -1,14 +1,12 @@
-import Events, { IEvent, IEventModel } from "../models/Events";
+import { HttpCode } from "../config/config";
+import Events, { IEvent, IEventModel, IEventPublicField } from "../models/Events";
+import { AppError } from "../utils/ErrorHandler";
+
 
 //To Create new Events
-const createEvent = async (eventDetails: IEvent): Promise<{}> => {
+const createEvent = async (eventDetails: object): Promise<IEventPublicField> => {
     try {
-        const newEvent = new Events({
-            eventTitle: eventDetails.eventTitle,
-            eventDesc: eventDetails.eventDesc,
-            eventDate: eventDetails.eventDate,
-            eventVenue: eventDetails.eventVenue,
-        });
+        const newEvent = new Events(eventDetails);
 
         const event = await newEvent.save();
         return newEvent.getPublicFields();
@@ -31,10 +29,30 @@ const getAll = async (): Promise<IEventModel[]> => {
     }
 }
 
+type EventDataType = {
+    eventTitle: string,
+    eventDesc: string,
+    eventDate: string,
+    eventVenue: object,
+    id: number
+}
+
 //To fetch a single Event By ID
-const getEventById = async (eventId: number) : Promise<IEventModel | null>  => {
+const getEventById = async (eventId: number) : Promise<IEventPublicField | null>  => {
     try {
-        return await Events.findOne({ id: eventId });
+        const event = await Events.findOne({ id: eventId })
+            .populate('eventVenue', 'name');
+
+
+        if (!event) {
+            throw new AppError({
+                statusCode: HttpCode.UNPROCESSABLE_ENTITY,
+                message: 'No Event Found With this Id',
+            });
+        } else {
+            return event.getPublicFields();
+        }
+        
     } catch (error) {     
         // Do something with the error
         return Promise.reject(error);
@@ -42,12 +60,22 @@ const getEventById = async (eventId: number) : Promise<IEventModel | null>  => {
 }
 
 // To update a single author details by id
-const updateEventById = async (eventId: number, eventDetails: IEvent) : Promise<IEventModel | null>  => {
+const updateEventById = async (eventId: number, eventDetails: {}) : Promise<IEventPublicField | null>  => {
     try {
-        return await Events.findOneAndUpdate({ id: eventId }, eventDetails, {
+        const event = await Events.findOneAndUpdate({ id: eventId }, eventDetails, {
             runValidators: true,
-            new: true,
+            new: true
         });
+
+        if (!event) {
+            throw new AppError({
+                statusCode: HttpCode.UNPROCESSABLE_ENTITY,
+                message: 'No Event Found With this Id',
+            });
+        } else {
+            return event.getPublicFields();
+        }
+        
     } catch (error) {     
     // Do something with the error
         return Promise.reject(error);
@@ -55,9 +83,19 @@ const updateEventById = async (eventId: number, eventDetails: IEvent) : Promise<
 }
 
 // To delete a single author details by id
-const deleteEventById = async (eventId: number) : Promise<IEventModel | null>  => {
+const deleteEventById = async (eventId: number) : Promise<IEventPublicField | null>  => {
     try {
-        return await Events.findOneAndDelete({ id: eventId });
+        const event = await Events.findOneAndDelete({ id: eventId });
+
+        if (!event) {
+            throw new AppError({
+                statusCode: HttpCode.UNPROCESSABLE_ENTITY,
+                message: 'No Event Found With this Id',
+            });
+        } else {
+            return event.getPublicFields();
+        }
+
     } catch (error) {     
     // Do something with the error
         return Promise.reject(error);

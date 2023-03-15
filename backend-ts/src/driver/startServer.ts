@@ -1,13 +1,11 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
+
 import { config } from '../config/config';
 import Logging from '../library/Logging';
-import authorRoutes from '../routes/Author';
-import eventRoutes from '../routes/Events';
-import userRoutes from '../routes/User';
-import venueRoutes from '../routes/Venues';
-import authRouhtes from '../routes/Auth'
 
-const app = express();
+import { AppError, customErrorHandler } from '../utils/ErrorHandler';
+
+export const app:Application = express();
 
 const PORT = config.server.port;
 
@@ -16,7 +14,7 @@ const startServer = () => {
     /** Log the request for debugging/developing purpose*/
     app.use((req, res, next) => {
     /** Log the incoming req */
-    Logging.info(`Incomming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
+    Logging.info(`Incoming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
     res.on('finish', () => {
         /** Log the return response */
@@ -43,31 +41,20 @@ const startServer = () => {
     });
 
     /** Healthcheck */
-    app.get('/ping', (req, res, next) => res.status(200).json({ hello: 'world' }));
-
-    /** Routes */
-    app.use('/authors', authorRoutes);
-    app.use('/events', eventRoutes);
-    app.use('/users', userRoutes);
-    app.use('/venues', venueRoutes);
-    app.use('/auth', authRouhtes)
-    
+    app.get('/ping', (req : Request, res : Response, next : NextFunction) => res.status(200).json({ hello: 'world' }));
 
     /** Error handling */
-    app.use((req, res, next) => {
+    app.use((err : AppError, req : Request, res : Response, next : NextFunction) => {
         const error = new Error('Not found');
-
         Logging.error(error);
-
-        res.status(404).json({
-            message: error.message
-        });
+        customErrorHandler(err, res);
     });
 
-   
     app.listen(PORT, () => {
         Logging.info(`Server is listening on port ${PORT}`);
     });
+
+    return app;
 }
 
 export default startServer;

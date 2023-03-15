@@ -84,6 +84,16 @@ const router = createBrowserRouter([
     )
   },
   {
+    path: 'edit-venue/:id',
+    element: (
+      <RequireAuth redirectTo="/login" allowedRoles={[ROLES[1]]}>
+        <Suspense fallback={suspenseFallbackEle}>
+          <CreateVenues />
+        </Suspense>
+      </RequireAuth>
+    )
+  },
+  {
     path: 'about-us',
     element: (
       <RequireAuth redirectTo="/login" allowedRoles={ROLES}>

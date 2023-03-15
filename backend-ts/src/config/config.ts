@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const env = process.env.NODE_ENV;
 const MONGO_USERNAME = process.env.MONGO_USERNAME || '';

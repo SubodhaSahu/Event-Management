@@ -1,24 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarker, faClock, faTrash } from '@fortawesome/fontawesome-free-solid';
 import { Link } from 'react-router-dom';
 import apis from '../../repositories/api';
+import ShowAlert from '../../UI/ShowAlert';
 
 function EventItem({ event }) {
+  const [error, setError] = useState('');
+
   const deleteEvent = (eventId) => {
     // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure to delete this event?')) {
       (async () => {
         try {
-            await apis.deleteEvent(eventId);
-        } catch (error) {
-          console.log(error);
+          await apis.deleteEvent(eventId);
+          window.reload();
+        } catch (err) {
+          setError(err);
         }
       })();
     }
   };
   return (
     <div className="col align-items-stretch" key={event.id}>
+      {error && (
+      <ShowAlert className="danger" closeAlert={() => setError('')}>
+        {error}
+      </ShowAlert>
+          )}
       <div
         className="card mb-4 box-shadow rounded"
         style={{ boxShadow: '0 0 0.875rem 0 rgb(33 37 41 / 5%' }}

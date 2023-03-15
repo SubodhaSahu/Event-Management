@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import apis from '../../repositories/api';
 import DashboardHoc from '../LayoutHoc/DashboardHoc';
 import EventItem from './EventItem';
 import Loader from '../../UI/Loader';
-import apis from '../../repositories/api';
 import ShowAlert from '../../UI/ShowAlert';
 
 function EventListing() {
@@ -23,6 +23,7 @@ function EventListing() {
 
       if (response.data.events.length === 0) {
         setNoEvents(true);
+        setError('');
       }
     } catch (err) {
       const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;

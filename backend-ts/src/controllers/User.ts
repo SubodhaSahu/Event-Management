@@ -1,25 +1,9 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+
 import userService from "../services/User";
 import wrapAsync from "../utils/AsynchErrorHandle";
 import { HttpCode, config } from "../config/config";
 
-const hashPassword = async (pw : string):Promise<string> => {
-    const saltRounds = 10; //The cost of processing the data
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = await bcrypt.hash(pw, salt);
-    return hash;
-};
-
-
-const createUser = wrapAsync(async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
-    const hasPassword = await hashPassword(password);
-   
-    const userObj = { name: name, email: email, password: hasPassword }
-    const user = await userService.createUser(userObj);
-    res.status(HttpCode.CREATED).json(user);
-});
 
 const readAll = wrapAsync(async (req: Request, res: Response) => { 
     const users = await userService.getAll();
@@ -61,4 +45,4 @@ const deleteUserById  = wrapAsync(async (req: Request, res: Response) => {
     }
 })
 
-export default {readAll, createUser, getUserById, updateUserById, deleteUserById}
+export default {readAll, getUserById, updateUserById, deleteUserById}
