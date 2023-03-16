@@ -12,7 +12,8 @@ const createEvent = wrapAsync(async (req: Request, res: Response, next: NextFunc
 });
 
 const readAll = wrapAsync(async (req: Request, res: Response, next: NextFunction) => { 
-    const events = await eventService.getAll();
+    const venueId = req.params.venueId || '';
+    const events = await eventService.getAll(venueId);
     return res.status(HttpCode.OK).json({ events });
 })
 

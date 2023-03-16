@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import apis from '../../repositories/api';
 import DashboardHoc from '../LayoutHoc/DashboardHoc';
 import EventItem from './EventItem';
@@ -7,8 +7,10 @@ import Loader from '../../UI/Loader';
 import ShowAlert from '../../UI/ShowAlert';
 
 function EventListing() {
+  const { venueId = '' } = useParams();
   const [events, setEvents] = useState([]);
   const [noEvents, setNoEvents] = useState(false);
+  const [pageTitle, setPageTitle] = useState('Events Around You');
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,14 +19,21 @@ function EventListing() {
 
   const fetchEvents = async () => {
     setIsLoading(true); // Hide the Loader
+    setNoEvents(false);
     try {
-      const response = await apis.getEvents();
-      setEvents(response.data.events);
+      let response = '';
+      if (venueId !== '') {
+        setPageTitle(`Event At ${venueId}`);
+        response = await apis.getEventsByVenue(venueId);
+      } else {
+         response = await apis.getEvents();
+      }
 
       if (response.data.events.length === 0) {
         setNoEvents(true);
         setError('');
       }
+      setEvents(response.data.events);
     } catch (err) {
       const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;
      // console.log(err);
@@ -36,7 +45,7 @@ function EventListing() {
 
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [venueId]);
   
   return (
     <div className="container-fluid mt-0">
@@ -44,6 +53,7 @@ function EventListing() {
         <Link to="/add-event" type="button" className="btn btn-primary">Add Event </Link>
       </div>
       <div className="row">
+        <h3 className="card-title text-primary text-center pb-2">{pageTitle}</h3>
         <div className="col-md-6 offset-3 text-center">
           {isLoading && <Loader /> }
           {error && (

@@ -38,7 +38,7 @@ function SideBarNav({ navtoggle }) {
               <li className="nav-link pt-3">
                 <NavLink to="/venues" className={`text-decoration-none ${splitLocation[1] === 'venues' ? 'active-link' : ''}`}>
                   <FontAwesomeIcon icon={faLocationArrow} /> 
-                  <span className={`${navActiveClass}`}> Venues</span>
+                  <span className={`${navActiveClass}`}> Event Center</span>
                 </NavLink>
               </li>
             )}

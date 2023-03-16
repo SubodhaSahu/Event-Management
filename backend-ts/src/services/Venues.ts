@@ -1,5 +1,5 @@
 import Venues, { IVenue, IVenueModel } from "../models/Venue";
-import bcrypt from "bcrypt";
+import Events from "../models/Events";
 
 //To Create new User
 const createVenue = async (venue: IVenue): Promise<{}> => {
@@ -43,6 +43,7 @@ const getVenueById = async (venueId: string) : Promise<IVenue | null>  => {
 // To update a single author details by id
 const updateVenueById = async (venueId: string, venueDetail: IVenue) : Promise<IVenue | null>  => {
     try {
+        await Events.deleteMany({ eventVenue: venueId })
         return await Venues.findByIdAndUpdate(venueId, venueDetail, {
             runValidators: true,
             new: true,

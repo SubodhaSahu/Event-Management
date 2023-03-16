@@ -44,6 +44,16 @@ const router = createBrowserRouter([
     )
   },
   {
+    path: 'center-by-event/:venueId',
+    element: (
+      <Suspense fallback={suspenseFallbackEle}>
+        <RequireAuth redirectTo="/login" allowedRoles={ROLES}>
+          <Index />     
+        </RequireAuth>
+      </Suspense>
+    )
+  },
+  {
     path: 'add-event',
     element: (
       <RequireAuth redirectTo="/login" allowedRoles={ROLES}>

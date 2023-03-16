@@ -15,6 +15,9 @@ const apis = {
     getEvents() {
         return Repository.get(`${eventUrl}`);
     },
+    getEventsByVenue(venueId) {
+        return Repository.get(`${eventUrl}/v/${venueId}`);
+    },
     getEventById(id) {
         return Repository.get(`${eventUrl}/${id}`);
     },
@@ -38,6 +41,9 @@ const apis = {
     },
     putVenue(id, payload) {
         return Repository.put(`${venueUrl}/${id}`, payload);
+    },
+    deleteVenue(id) {
+        return Repository.delete(`${venueUrl}/${id}`);
     },
     getUsers() {
         return Repository.get(`${userUrl}`);

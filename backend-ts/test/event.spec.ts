@@ -1,5 +1,5 @@
 import { describe, it } from 'mocha';
-import chai, { expect } from "chai";
+import chai, { expect } from 'chai';
 import chaiHttp from 'chai-http';
 
 import Events from '../src/models/Events';
@@ -17,11 +17,6 @@ after(async () => {
   await Events.deleteMany({});
   await Venue.deleteMany({});
 })
-// after((done) => {
-//   Events.deleteMany({});
-//   Venue.deleteMany({});
-//   done();
-// });
 
 
 /**

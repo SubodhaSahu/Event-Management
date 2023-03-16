@@ -1,6 +1,6 @@
 import { IVenue, IVenueAddress } from "../models/Venue";
 
-class UserDTO {
+class VenueDTO {
     name: string;
     address: IVenueAddress
 
@@ -10,4 +10,4 @@ class UserDTO {
     }
 }
 
-export default UserDTO
+export default VenueDTO

@@ -1,5 +1,6 @@
 import { HttpCode } from "../config/config";
 import Events, { IEvent, IEventModel, IEventPublicField } from "../models/Events";
+import Venue from "../models/Venue";
 import { AppError } from "../utils/ErrorHandler";
 
 
@@ -17,10 +18,14 @@ const createEvent = async (eventDetails: object): Promise<IEventPublicField> => 
 }
 
 //To Fetch all the Events
-const getAll = async (): Promise<IEventModel[]> => {
+const getAll = async (venueId: string | null): Promise<IEventModel[]> => {
     try {
+        let condition = {};
+        if (venueId != '') {
+            condition = {eventVenue: venueId}
+        }
        // 0 means ignore the column & 1 means fetch the column details.
-        return await Events.find({})
+        return await Events.find(condition)
             .select({ _id: 0, id: 1, eventDesc: 1, eventDate: 1, eventTitle: 1 })
             .populate('eventVenue', 'name');
     } catch (error) {    
@@ -42,8 +47,6 @@ const getEventById = async (eventId: number) : Promise<IEventPublicField | null>
     try {
         const event = await Events.findOne({ id: eventId })
             .populate('eventVenue', 'name');
-
-
         if (!event) {
             throw new AppError({
                 statusCode: HttpCode.UNPROCESSABLE_ENTITY,

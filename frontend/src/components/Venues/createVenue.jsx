@@ -42,7 +42,8 @@ function CreateVenue() {
 
   useEffect(() => {
     // Get the data in order to populate while editing
-    if (id !== 0) {
+    if (id !== '') {
+      console.log('Hello');
       getVenueDetails(id);
     }
   }, [id]);
@@ -81,7 +82,7 @@ function CreateVenue() {
         <div className="col align-items-stretch">
           <div className="card h-100">
             <div className="card-title p-3">
-              <span className="text-center">Add Venue </span>
+              <span className="text-center">Add Event center </span>
               <a href="/venues" className="btn btn-primary float-end">Go Back</a>
             </div>
             <div className="card-body">

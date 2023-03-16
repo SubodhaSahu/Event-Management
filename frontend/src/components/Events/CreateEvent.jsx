@@ -30,7 +30,7 @@ function CreateEvent() {
       setEventTitle(title);
       setEventDesc(desc);
       setEventDate(date);
-      setEventVenue(venue);
+      setEventVenue(venue?._id);
     } catch (err) {
       setError(err);
     }
@@ -110,7 +110,7 @@ function CreateEvent() {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1">Title</div>
+                  <div className="col-md-2 text-center">Title</div>
                   <div className="col-md-6 form-outline mb-0">
                     <input
                       type="text"
@@ -126,7 +126,7 @@ function CreateEvent() {
                   </div>
                 </div>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1"> Description</div>
+                  <div className="col-md-2 text-center"> Description</div>
                   <div className="col-md-6 form-outline mb-0">
                     <textarea
                       className="form-control"
@@ -140,7 +140,7 @@ function CreateEvent() {
                   </div>
                 </div>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1">Date</div>
+                  <div className="col-md-2 text-center">Date</div>
                   <div className="col-md-6 form-outline mb-0">
                     
                     <input
@@ -157,7 +157,7 @@ function CreateEvent() {
                   </div>
                 </div>
                 <div className="row  mx-2 my-3">
-                  <div className="col-md-1">Venue</div>
+                  <div className="col-md-2 text-center">Event Center</div>
                   <div className="col-md-6 form-outline mb-0">
                     <select
                       id="eventVenue"
@@ -169,7 +169,7 @@ function CreateEvent() {
                       onChange={e => setEventVenue(e.target.value)}
                       required
                     >
-                      <option value="">--Select Venue--</option>
+                      <option value="">--event center--</option>
                       {venues.map((venue) => (
                         <option value={venue._id} key={venue._id}>{venue.name}</option>
                       ))}
