@@ -55,11 +55,11 @@ function TopNavBar() {
                   <span className="d-none d-sm-inline mx-1">{loggedUserName}</span>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
-                  <li>
+                  {/* <li>
                     <a className="dropdown-item" href="profile">
                       Profile
                     </a>
-                  </li>
+                  </li> */}
                   <li>
                     <hr className="dropdown-divider" />
                   </li>

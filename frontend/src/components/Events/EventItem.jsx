@@ -2,25 +2,25 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMapMarker, faClock, faTrash } from '@fortawesome/fontawesome-free-solid';
 import { Link } from 'react-router-dom';
-import apis from '../../repositories/api';
 import ShowAlert from '../../UI/ShowAlert';
+// import apis from '../../repositories/api';
 
-function EventItem({ event }) {
+function EventItem({ event, onDelete }) {
   const [error, setError] = useState('');
 
-  const deleteEvent = (eventId) => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure to delete this event?')) {
-      (async () => {
-        try {
-          await apis.deleteEvent(eventId);
-          window.reload();
-        } catch (err) {
-          setError(err);
-        }
-      })();
-    }
-  };
+  // const deleteEvent = (eventId) => {
+  //   // eslint-disable-next-line no-alert
+  //   if (window.confirm('Are you sure to delete this event?')) {
+  //     (async () => {
+  //       try {
+  //         await apis.deleteEvent(eventId);
+  //         window.reload();
+  //       } catch (err) {
+  //         setError(err);
+  //       }
+  //     })();
+  //   }
+  // };
   return (
     <div className="col align-items-stretch" key={event.id}>
       {error && (
@@ -53,7 +53,7 @@ function EventItem({ event }) {
               <Link to={`/edit-event/${event.id}`} type="btn" className="btn btn-outline-primary ">Edit Event</Link>
             </div>
             <div className="col-md-4 col-lg-4 col-sm-12 text-end">
-              <button type="button" onClick={() => deleteEvent(event.id)} className="btn btn-icon">
+              <button type="button" onClick={() => onDelete(event.id)} className="btn btn-icon">
                 <FontAwesomeIcon icon={faTrash} className="text-secondary fw-lighter fs-6 " />
               </button>
             </div>   

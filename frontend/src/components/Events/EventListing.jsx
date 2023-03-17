@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import apis from '../../repositories/api';
 import DashboardHoc from '../LayoutHoc/DashboardHoc';
 import EventItem from './EventItem';
 import Loader from '../../UI/Loader';
 import ShowAlert from '../../UI/ShowAlert';
+import apis from '../../repositories/api';
 
 function EventListing() {
   const { venueId = '' } = useParams();
@@ -46,6 +46,22 @@ function EventListing() {
   useEffect(() => {
     fetchEvents();
   }, [venueId]);
+
+  const deleteEventHandler = (eventId) => {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Are you sure to delete this event?')) {
+      (async () => {
+        try {
+          const newEvents = events.filter(event => event.id !== eventId);
+          setEvents([...newEvents]);
+
+         await apis.deleteEvent(eventId);
+        } catch (err) {
+          setError(err);
+        }
+      })();
+    }
+  };
   
   return (
     <div className="container-fluid mt-0">
@@ -65,7 +81,7 @@ function EventListing() {
       </div>
       <div className="row row-cols-1 row-cols-md-3 g-4">
         {events.length > 0 && events.map((event) => (
-          <EventItem key={event.id} event={event} />
+          <EventItem key={event.id} event={event} onDelete={deleteEventHandler} />
         ))}
         
         {noEvents && (

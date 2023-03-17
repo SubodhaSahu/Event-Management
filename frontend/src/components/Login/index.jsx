@@ -42,9 +42,10 @@ function Login() {
       userInfo.token = token;
       userInfo.refreshToken = refreshToken;
       onLoginSetAuth(JSON.stringify(userInfo));
+
       if (localStorage.getItem('isLoggedIn')) {
-        navigate('/dashboard');
-       // window.location.reload(); // For first attempt it's unable to read from local storage
+         navigate('/dashboard');
+         window.location.reload(); // For first attempt it's unable to read from local storage
       }
     } catch (err) {
       const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;
