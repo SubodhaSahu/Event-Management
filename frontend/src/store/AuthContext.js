@@ -43,7 +43,7 @@ export function AuthContextProvider(props) {
     userInfo,
     onLogout: logoutHandler,
     onLoginSetAuth: loginHandler
-  }));  
+  }), [isLoggedIn]);  
   const { children } = props;
 
   return (

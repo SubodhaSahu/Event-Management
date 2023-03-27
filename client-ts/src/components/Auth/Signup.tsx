@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -6,20 +7,19 @@ import {
   faCheck,
   faTimes,
   faInfoCircle,
-  faLock
-} from '@fortawesome/fontawesome-free-solid';
-import { Link } from 'react-router-dom';
-import CommonHoc from '../LayoutHoc/CommonHoc';
-import Loader from '../../UI/Loader';
-import ShowAlert from '../../UI/ShowAlert';
+  faLock,
+} from '@fortawesome/free-solid-svg-icons';
 import apis from '../../repositories/api';
+import Loader from '../UI/Loader';
+import ShowAlert from '../UI/ShowAlert';
+import { isApiError } from '../../utility/CustomError';
 import '../../style/style.css';
+import defaultErrorMessage from '../../utility/ErrorMessages';
 
-const defaultErrorMessage = 'Something went wrong';
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{6,24}$/;
 
 function Signup() {
-  const userRef = useRef();
+  const userRef = useRef<HTMLInputElement>(null);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,8 +36,6 @@ function Signup() {
 
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
-  
-  // Life Cycle Method React
 
   useEffect(() => {
     setValidPwd(PWD_REGEX.test(password));
@@ -45,17 +43,17 @@ function Signup() {
   }, [password, confirmPassword]);
 
   useEffect(() => {
-    userRef.current.focus();
+    userRef?.current?.focus();
   }, []);
 
   const resetForm = () => {
-    setName('');
+    setName(true);
     setEmail('');
     setPassword('');
     setConfirmPassword('');
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -69,42 +67,41 @@ function Signup() {
       resetForm();
       setSuccessMsg(response.data.message || 'User Created Successfully');
     } catch (err) {
-      const errMsg = 'response' in err ? err.response.data.message : defaultErrorMessage;
-      setError(errMsg === undefined ? defaultErrorMessage : errMsg);
+      let errMsg = defaultErrorMessage;
+      if (isApiError(err)) {
+        errMsg = err.response.data.message;
+      }
+      setError(errMsg);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
+
   return (
     <div>
       <p className="text-center h6 fw-bold mb-2">Create Account</p>
       <p className="text-center h6 fw-bold mb-3">
-        Already have an account? Then
-        {' '}
+        Already have an account? Then{' '}
         <Link to="/login" relative="path">
           Login
-        </Link>
-        {' '}
+        </Link>{' '}
         here
       </p>
 
       {/* Show The Loader */}
-      <div className="pb-2">
-        {isLoading && <Loader /> }
-      </div>
+      <div className="pb-2">{isLoading && <Loader />}</div>
       <form className="mx-1 mx-md-4" onSubmit={handleSubmit}>
-
         {/* Show The Success Message */}
-        { successMsg && (
-          <ShowAlert className="success" closeAlert={() => setSuccessMsg('')}>
+        {successMsg && (
+          <ShowAlert className="success" hideAlert={() => setSuccessMsg('')}>
             {successMsg}
           </ShowAlert>
         )}
 
         {/* Show The Error  Message */}
         {error && (
-          <ShowAlert className="danger" closeAlert={() => setError('')}>
-              {error}
+          <ShowAlert className="danger" hideAlert={() => setError('')}>
+            {error}
           </ShowAlert>
         )}
         <div className="d-flex flex-row align-items-center mb-4">
@@ -119,7 +116,7 @@ function Signup() {
               placeholder="Name"
               value={name}
               required
-              onChange={e => setName(e.target.value)} 
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
         </div>
@@ -134,16 +131,24 @@ function Signup() {
               placeholder="Email"
               value={email}
               required
-              onChange={e => setEmail(e.target.value)} 
-
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
 
         <div className="d-flex flex-row align-items-center mb-4">
-          <FontAwesomeIcon icon={faLock} className={!password ? 'me-3 fs-4' : 'hide'} />
-          <FontAwesomeIcon icon={faCheck} className={validPwd ? 'me-3 fs-4 valid' : 'hide'} />
-          <FontAwesomeIcon icon={faTimes} className={validPwd || !password ? 'hide' : 'me-3 fs-4 invalid'} />
+          <FontAwesomeIcon
+            icon={faLock}
+            className={!password ? 'me-3 fs-4' : 'hide'}
+          />
+          <FontAwesomeIcon
+            icon={faCheck}
+            className={validPwd ? 'me-3 fs-4 valid' : 'hide'}
+          />
+          <FontAwesomeIcon
+            icon={faTimes}
+            className={validPwd || !password ? 'hide' : 'me-3 fs-4 invalid'}
+          />
           <div className="form-outline flex-fill mb-0">
             <input
               type="password"
@@ -153,38 +158,55 @@ function Signup() {
               value={password}
               aria-describedby="pwdnote"
               required
-              onChange={e => setPassword(e.target.value)} 
+              onChange={(e) => setPassword(e.target.value)}
               onFocus={() => setPwdFocus(true)}
               onBlur={() => setPwdFocus(false)}
             />
           </div>
-         
         </div>
-        <div className={pwdFocus && !validPwd ? 'instructions align-items-center mb-4' : 'offscreen align-items-center mb-4'}>
-          <p id="pwdnote" className={pwdFocus && !validPwd ? 'instructions' : 'offscreen'}>
+        <div
+          className={
+            pwdFocus && !validPwd
+              ? 'instructions align-items-center mb-4'
+              : 'offscreen align-items-center mb-4'
+          }
+        >
+          <p
+            id="pwdnote"
+            className={pwdFocus && !validPwd ? 'instructions' : 'offscreen'}
+          >
             <FontAwesomeIcon icon={faInfoCircle} />
             6 to 24 characters.
             <br />
-            Must include uppercase and lowercase letters, a number and a special character.
+            Must include uppercase and lowercase letters, a number and a special
+            character.
             <br />
-            Allowed special characters: 
-            {' '}
-            <span aria-label="exclamation mark">!</span> 
-            {' '}
-            <span aria-label="at symbol">@</span> 
-            {' '}
-            <span aria-label="hashtag">#</span> 
-            {' '}
-            <span aria-label="dollar sign">$</span> 
-            {' '}
+            Allowed special characters:{' '}
+            <span aria-label="exclamation mark">!</span>{' '}
+            <span aria-label="at symbol">@</span>{' '}
+            <span aria-label="hashtag">#</span>{' '}
+            <span aria-label="dollar sign">$</span>{' '}
             <span aria-label="percent">%</span>
           </p>
         </div>
 
         <div className="d-flex flex-row align-items-center mb-4">
-          <FontAwesomeIcon icon={faLock} className={!confirmPassword ? 'me-3 fs-4' : 'hide'} />
-          <FontAwesomeIcon icon={faCheck} className={validMatch && confirmPassword ? 'valid me-3 fs-4' : 'hide'} />
-          <FontAwesomeIcon icon={faTimes} className={validMatch || !confirmPassword ? 'hide' : 'invalid me-3 fs-4'} />
+          <FontAwesomeIcon
+            icon={faLock}
+            className={!confirmPassword ? 'me-3 fs-4' : 'hide'}
+          />
+          <FontAwesomeIcon
+            icon={faCheck}
+            className={
+              validMatch && confirmPassword ? 'valid me-3 fs-4' : 'hide'
+            }
+          />
+          <FontAwesomeIcon
+            icon={faTimes}
+            className={
+              validMatch || !confirmPassword ? 'hide' : 'invalid me-3 fs-4'
+            }
+          />
           <div className="form-outline flex-fill mb-0">
             <input
               type="password"
@@ -194,14 +216,20 @@ function Signup() {
               name="confirmPassword"
               value={confirmPassword}
               aria-describedby="confirmnote"
-              onChange={e => setConfirmPassword(e.target.value)} 
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               onFocus={() => setMatchFocus(true)}
               onBlur={() => setMatchFocus(false)}
             />
           </div>
         </div>
-        <div className={matchFocus && !validMatch ? 'instructions align-items-center mb-4' : 'offscreen align-items-center mb-4'}>
+        <div
+          className={
+            matchFocus && !validMatch
+              ? 'instructions align-items-center mb-4'
+              : 'offscreen align-items-center mb-4'
+          }
+        >
           <p id="confirmnote">
             <FontAwesomeIcon icon={faInfoCircle} />
             Must match the first password input field.
@@ -215,15 +243,17 @@ function Signup() {
             id="form2Example3c"
             required
           />
-          <label className="form-check-label" htmlFor="form2Example3">
-            I agree all statements in 
-            {' '}
-            <a href="#!">Terms of service</a>
-          </label>
+          <p className="form-check-label">
+            I agree all statements in <a href="#!">Terms of service</a>
+          </p>
         </div>
 
         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-          <button type="submit" className="btn btn-outline-primary" disabled={isLoading}>
+          <button
+            type="submit"
+            className="btn btn-outline-primary"
+            disabled={isLoading}
+          >
             Register
           </button>
         </div>
@@ -232,4 +262,4 @@ function Signup() {
   );
 }
 
-export default CommonHoc(Signup);
+export default Signup;

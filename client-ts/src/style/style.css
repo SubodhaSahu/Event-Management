@@ -1,0 +1,141 @@
+
+.side-navbar {
+    background-color: #FFFFFF;
+    border-right: 1px solid #cbd0dd;
+    transition: 0.5s;
+  }
+  
+  .nav-link:active,
+  .nav-link:focus,
+  .nav-link:hover {
+    background-color: #cbd0dd;
+  }
+  .nav-link .active-link{
+    background-color: #cbd0dd;
+    padding : 10px
+  }
+  
+  .my-container {
+    transition: 0.4s;
+  }
+  
+  .active-nav {
+    margin-left: 0;
+  }
+  
+  /* for main section */
+  /* .active-cont {
+    margin-left: 250px;
+  } */
+  
+  #menu-btn {
+    background-color: #cbd0dd;
+    color: #fff;
+    margin-left: -62px;
+  }
+  
+  .my-container input {
+    border-radius: 2rem;
+    padding: 2px 20px;
+  }
+  .footer{
+    background: #fff;
+    direction: ltr;
+    padding: 1rem 0.875rem;
+  }
+  .footer-bs{
+    position: absolute;
+    width: 100%;
+    min-height: 320px;
+    bottom: 40px;
+    left: 0;
+}
+.top-nav{
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #cbd0dd;
+}
+body {
+  background-color: rgb(238, 238, 238);
+}
+
+.main {
+  background: #f5f7fb;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 0;
+  overflow: hidden;
+  transition: margin-left .35s ease-in-out,left .35s ease-in-out,margin-right .35s ease-in-out,right .35s ease-in-out;
+}
+.sidebar{
+  direction: ltr;
+  background-color: #FFFFFF;
+  border-right: 1px solid #cbd0dd;
+  transition: 0.5s;
+}
+
+.sidebar-content{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.navbar-bg {
+  background: #fff;
+}
+.navbar {
+  border-bottom: 0;
+  box-shadow: 0 0 2rem 0 rgb(33 37 41 / 10%);
+}
+.main-body{
+  padding: 1.5rem 1.5rem 0.75rem;
+  max-height: 85vh;
+  min-height: 85vh
+}
+
+.instructions {
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #000;
+  color: #fff;
+  padding: 0.25rem;
+  position: relative;
+  bottom: -10px;
+}
+
+/* .instructions > svg {
+  margin-right: 0.25rem;
+} */
+
+.offscreen {
+  position: absolute;
+  left: -9999px;
+}
+
+.hide {
+  display: none;
+}
+
+.valid {
+  color: limegreen;
+}
+
+.invalid {
+  color: red;
+  margin-left: 0.25rem;
+}
+
+.errmsg {
+  background-color: lightpink;
+  color: firebrick;
+  font-weight: bold;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.line {
+  display: inline-block;
+}
+  
