@@ -47,7 +47,7 @@ function Signup() {
   }, []);
 
   const resetForm = () => {
-    setName(true);
+    setName('');
     setEmail('');
     setPassword('');
     setConfirmPassword('');

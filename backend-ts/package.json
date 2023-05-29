@@ -4,11 +4,18 @@
   "description": "Express API using Typescript",
   "main": "src/server.ts",
   "scripts": {
-    "build": "rm -rf build/ && tsc",
-    "start": "export NODE_ENV=local && nodemon ./src/driver/server.ts",
+    "build": "rimraf build && tsc",
+    "add-build": "git add build",
+    "ts.check": "tsc --project tsconfig.json",
+    "start": "nodemon ./src/driver/server.ts",
     "test": "NODE_ENV=test mocha --check-leaks --timeout 10000 -r ts-node/register -r tsconfig-paths/register \"./test/**/*.spec.ts\""
   },
-  "_comment" : "--check-leaks Not leaking any global variable tsconfig-paths/register to use import and export",
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+  ],
+  "_comment": "--check-leaks Not leaking any global variable tsconfig-paths/register to use import and export",
   "author": "Subodha",
   "license": "ISC",
   "dependencies": {
@@ -30,6 +37,8 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/mocha": "^10.0.1",
     "@types/supertest": "^2.0.12",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.1",
     "supertest": "^6.3.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.2",

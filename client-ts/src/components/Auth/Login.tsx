@@ -103,7 +103,7 @@ function Login() {
         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
           <button
             type="submit"
-            className="btn btn-outline-primary"
+            className="btn btn-outline-primary scss-button"
             disabled={isLoading}
           >
             Login

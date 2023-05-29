@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import router from './RouteConfig';
 import { AuthContextProvider } from './store/AuthContext';
+import './scss/test.scss';
 // import Header from './components/Auth/Layout/Header';
 // import Login from './components/Auth/Login';
 // import Signup from './components/Auth/Signup';
