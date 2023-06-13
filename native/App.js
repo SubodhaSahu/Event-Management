@@ -1,33 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-
-
-
+import React from 'react';
+import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 
-import Login from './screens/Login';
-import SignUp from './screens/Signup';
-
-const Stack = createStackNavigator();
+import { StyleSheet } from 'react-native';
+import AuthStack from './src/Navigation/AuthStack';
+import AppStack from './src/Navigation/AppStack';
+import { NativeBaseProvider } from 'native-base';
+import { AuthProvider } from './src/Context/AuthContext';
+import Navigation from './src/Navigation/Navigation';
+import { LogBox } from "react-native";
 
 function App() {
+  LogBox.ignoreLogs(["EventEmitter.removeListener"]);
   return (
-    <>
-     <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Login">
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Signup" component={SignUp} />
-      {/* <StatusBar /> */}
-    </Stack.Navigator>
-    </>
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <AuthProvider>
+         <Navigation />
+      </AuthProvider>
+      </NavigationContainer>
+    </NativeBaseProvider>
   );
 }
 
 export default () => {
   return (
-    <NavigationContainer>   
-        <App />  
-    </NavigationContainer>
+    <>
+      <App />  
+    </>
   )
 }
 

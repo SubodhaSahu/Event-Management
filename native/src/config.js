@@ -1,0 +1,1 @@
+export const API_URL = 'https://event-management-5cvp.vercel.app/';

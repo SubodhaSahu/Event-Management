@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -8,9 +8,13 @@ import {
   StatusBar,
   ImageBackground,
 } from "react-native";
-import { NativeBaseProvider, Input, Stack, Icon, Button } from "native-base";
+import { NativeBaseProvider, Input, Stack, Icon } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../Context/AuthContext";
+
+import ErrorAlert from "../components/ErrorAlert";
+import Loader from "../components/Loader";
 
 const image = {
   uri: "https://images.unsplash.com/photo-1454117096348-e4abbeba002c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80",
@@ -18,6 +22,24 @@ const image = {
 
 function Signup(props) {
   const navigation = useNavigation();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const [showErr, setShowError] = useState(true);
+
+  const {isLoading, register, signupError} = useContext(AuthContext);
+
+  const onSignUp = async (name, email, password, confirmPwd) => {
+    console.log('On Sign Up Method')
+    if (password !== confirmPwd) {
+      //Show Error Message 
+      return;
+    }
+    register({ name, email, password });
+
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -38,6 +60,11 @@ function Signup(props) {
             <Text style={styles.signupText}> Login</Text>
           </TouchableOpacity>
         </View>
+        {(signupError && showErr) && (
+        <View style={styles.Middle} >
+            <ErrorAlert errorMsg={signupError} setShowError={setShowError} showErr={showErr} />
+          </View>
+        )} 
         <View style={styles.loginContainer}>
           <View style={styles.Middle}>
             <Stack
@@ -62,6 +89,31 @@ function Signup(props) {
                   />
                 }
                 variant="outline"
+                placeholder="Name"
+                _light={{
+                  placeholderTextColor: "blueGray.400",
+                }}
+                _dark={{
+                  placeholderTextColor: "blueGray.50",
+                }}
+                value={name}
+                onChangeText={(e) => setName(e)}
+              />
+              <Input
+                InputLeftElement={
+                  <Icon
+                    as={<FontAwesome5 name="user" />}
+                    size="sm"
+                    m={2}
+                    _light={{
+                      color: "black",
+                    }}
+                    _dark={{
+                      color: "gray.300",
+                    }}
+                  />
+                }
+                variant="outline"
                 placeholder="Username or Email"
                 _light={{
                   placeholderTextColor: "blueGray.400",
@@ -69,6 +121,8 @@ function Signup(props) {
                 _dark={{
                   placeholderTextColor: "blueGray.50",
                 }}
+                value={email}
+                onChangeText={(e) => setEmail(e)}
               />
               <Input
                 InputLeftElement={
@@ -93,14 +147,42 @@ function Signup(props) {
                 _dark={{
                   placeholderTextColor: "blueGray.50",
                 }}
+                value={password}
+                onChangeText={(e) => setPassword(e)}
+              />
+              <Input
+                InputLeftElement={
+                  <Icon
+                    as={<FontAwesome5 name="key" />}
+                    size="sm"
+                    m={2}
+                    _light={{
+                      color: "black",
+                    }}
+                    _dark={{
+                      color: "gray.300",
+                    }}
+                  />
+                }
+                variant="outline"
+                secureTextEntry={true}
+                placeholder="Confirm Password"
+                _light={{
+                  placeholderTextColor: "blueGray.400",
+                }}
+                _dark={{
+                  placeholderTextColor: "blueGray.50",
+                }}
+                value={confirmPwd}
+                onChangeText={(e) => setConfirmPwd(e)}
               />
             </Stack>
-            <Button
-              style={styles.buttonDesign}
-              onPress={() => alert("Sign Up")}
-            >
-              Sign Up
-            </Button>
+            <TouchableOpacity style={styles.buttonDesign} onPress={() => onSignUp(name, email, password, confirmPwd)} disabled={isLoading}>
+              {isLoading ? (<Loader />
+              ) : (
+                <Text style={styles.loginBtnText} > Sign Up</Text>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
         <StatusBar style="auto" />
@@ -155,5 +237,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#026efd",
     marginTop: 10,
     borderRadius: 50,
+    padding: 10,
   },
+  loginBtnText: {
+    color: '#FFFFFF',
+    textAlign: 'center', 
+  }
 });
